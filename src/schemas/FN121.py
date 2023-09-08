@@ -1,0 +1,63 @@
+from dataclasses import dataclass
+from datetime import date, time
+
+
+@dataclass
+class FN121:
+    prj_cd: str
+    sam: str
+    process_type: str
+    ssn: str
+    subspace: str
+    mode: str
+    effdt0: date
+    efftm0: time
+    effdt1: date
+    efftm1: time
+    effdur: float
+    effst: str
+    sitp: str
+    dd_lat0: float
+    dd_lon0: float
+    dd_lat1: float
+    dd_lon1: float
+    grid5: str
+    sitem0: float
+    sitem1: float
+    sidep0: float
+    sidep1: float
+    grdepmax: float
+    grdepmid: float
+    grdepmin: float
+    secchi0: float
+    secchi1: float
+    slime: str
+    crew: str
+    comment1: str
+    vessel: str
+    vessel_direction: str
+    vessel_speed: str
+    warp: str
+    bottom: str
+    cover: str
+    lead_angle: str
+    leaduse: str
+    distoff: float
+    vegetation: str
+    o2bot0: float
+    o2bot1: float
+    o2surf0: float
+    o2surf1: float
+    o2gr0: float
+    o2gr1: float
+    airtem0: float
+    airtem1: float
+    wind0: str
+    wind1: str
+    precip0: str
+    precip1: str
+    cloud_pc0: float
+    cloud_pc1: float
+    waveht0: float
+    waveht1: float
+    xweather: str
