@@ -1,23 +1,24 @@
 from litestar import Controller, get
 from typing import Optional
 from schemas import FN121
-from utils import get_rows, args_to_where
+from utils import get_data, get_rows
 
 
 class FN121Controller(Controller):
     path = "api/fn121"
 
     @get("/")
-    async def list_fn121(
+    async def fn121_list(
         self,
+        prj_cd: Optional[str] = None,
+        sam: Optional[str] = None,
         ssn: Optional[str] = None,
         subspace: Optional[str] = None,
         mode: Optional[str] = None,
     ) -> list[FN121]:
-
         # filters and values
-        names = ["ssn", "mode", "subspace"]
-        values = [ssn, mode, subspace]
+        names = ["prj_cd", "sam", "ssn", "mode", "subspace"]
+        values = [prj_cd, sam, ssn, mode, subspace]
 
         sql = """SELECT [PRJ_CD],
              [SAM],
@@ -76,22 +77,15 @@ class FN121Controller(Controller):
              [WAVEHT0],
              [WAVEHT1],
              [XWEATHER]
-            FROM FN121
+            FROM [FN121]
             """
 
-        if values.count(None) != len(values):
-            where = args_to_where(names, values)
-            sql = sql + where
-            args = [val for val in values if val is not None]
-            data = await get_rows(sql, args)
-        else:
-            data = await get_rows(sql)
+        data = await get_data(sql, names, values)
 
         return data
 
-    @get("/{sam:str}")
-    async def get_fn121(self, sam: str) -> FN121:
-
+    @get("{prj_cd:str}/{sam:str}")
+    async def fn121_detail(self, prj_cd: str, sam: str) -> FN121:
         sql = """SELECT [PRJ_CD],
              [SAM],
              [PROCESS_TYPE],
@@ -149,13 +143,14 @@ class FN121Controller(Controller):
              [WAVEHT0],
              [WAVEHT1],
              [XWEATHER]
-            FROM FN121
-            where [sam] = ?
+            FROM [FN121]
+            where [prj_cd]= ? & [sam] = ?
             """
 
         data = await get_rows(
             sql,
             [
+                prj_cd,
                 sam,
             ],
         )

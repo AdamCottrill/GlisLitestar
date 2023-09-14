@@ -1,7 +1,5 @@
 from litestar import Litestar, get, MediaType
 
-
-from utils import get_rows
 from controllers import (
     FN011,
     FN012,
@@ -10,8 +8,19 @@ from controllers import (
     FN026Subspace,
     FN028,
     FN121,
+    FN121Electrofishing,
+    FN121GpsTrack,
     FN122,
     FN123,
+    FN123NonFish,
+    FN124,
+    FN125,
+    FN125Lamprey,
+    FN125Tag,
+    FN126,
+    FN127,
+    GrEffProcType,
+    StreamDimension,
 )
 
 
@@ -29,5 +38,27 @@ def index() -> str:
 
 
 app = Litestar(
-    [index, FN011, FN012, FN022, FN026, FN026Subspace, FN028, FN121, FN122, FN123]
+    [
+        index,
+        FN011,
+        FN012,
+        FN022,
+        FN026,
+        FN026Subspace,
+        FN028,
+        FN121,
+        FN121Electrofishing,
+        FN121GpsTrack,
+        FN122,
+        FN123,
+        FN123NonFish,
+        FN125,
+        FN125Lamprey,
+        FN125Tag,
+        FN124,
+        FN126,
+        FN127,
+        GrEffProcType,
+        StreamDimension,
+    ]
 )

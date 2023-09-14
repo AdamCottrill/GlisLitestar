@@ -24,6 +24,23 @@ async def get_rows(sql: str, args: list = None):
     return results
 
 
+async def get_data(sql:str, names, values):
+    """build the where clause from the the values in names and values
+    and tack it onto the sql statement before executing the sql
+    statement.
+
+    """
+    if values.count(None) != len(values):
+        where = args_to_where(names, values)
+        sql = sql + where
+        args = [val for val in values if val is not None]
+        data = await get_rows(sql, args)
+    else:
+        data = await get_rows(sql)
+
+    return data
+
+
 def args_to_where(names: list[str], values: list[Union[str, int, None]]) -> str:
     """a little helper function to lake a list of filter names and
     assocaited values and return the where clause that can be added to

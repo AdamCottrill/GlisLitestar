@@ -5,7 +5,16 @@ from .FN026 import FN026Controller as FN026
 from .FN026Subspace import FN026SubspaceController as FN026Subspace
 from .FN028 import FN028Controller as FN028
 from .FN121 import FN121Controller as FN121
-
+from .FN121Electrofishing import FN121ElectrofishingController as FN121Electrofishing
+from .FN121GpsTrack import FN121GpsTrackController as FN121GpsTrack
 from .FN122 import FN122Controller as FN122
-
 from .FN123 import FN123Controller as FN123
+from .FN123NonFish import FN123NonFishController as FN123NonFish
+from .FN124 import FN124Controller as FN124
+from .FN125 import FN125Controller as FN125
+from .FN125Lamprey import FN125LampreyController as FN125Lamprey
+from .FN125Tag import FN125TagController as FN125Tag
+from .FN126 import FN126Controller as FN126
+from .FN127 import FN127Controller as FN127
+from .GearEffortProcessType import GearEffProcTypeController as GrEffProcType
+from .StreamDimension import StreamDimensionController as StreamDimension
