@@ -24,7 +24,7 @@ from controllers import (
 )
 
 
-@get(path="/", media_type=MediaType.HTML)
+@get(path="/", media_type=MediaType.HTML, sync_to_thread=False)
 def index() -> str:
     return """
     <html>

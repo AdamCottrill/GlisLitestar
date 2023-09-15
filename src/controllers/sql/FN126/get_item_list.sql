@@ -1,0 +1,15 @@
+SELECT
+ [PRJ_CD],
+ [SAM],
+ [EFF],
+ [SPC],
+ [GRP],
+ [FISH],
+ [FOOD],
+ [TAXON],
+ [FDCNT],
+ [FDMES],
+ [FDVAL],
+ [LIFESTAGE],
+ [COMMENT6]
+FROM [FN126]

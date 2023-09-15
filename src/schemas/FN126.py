@@ -1,3 +1,4 @@
+from typing import Optional
 from dataclasses import dataclass
 
 
@@ -9,10 +10,20 @@ class FN126:
     spc: str
     grp: str
     fish: str
-    food: str
+    food: int
     taxon: str
-    fdcnt: str
+    fdcnt: int
     fdmes: str
-    fdval: str
+    fdval: float
     lifestage: str
     comment6: str
+
+
+@dataclass
+class FN126Partial:
+    taxon: Optional[str] = None
+    fdcnt: Optional[int] = None
+    fdmes: Optional[str] = None
+    fdval: Optional[float] = None
+    lifestage: Optional[str] = None
+    comment6: Optional[str] = None

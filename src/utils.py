@@ -1,13 +1,20 @@
 import os
+from pathlib import Path
+
 from typing import Union
+
 import aioodbc
 
 
 SRC_DB = os.path.abspath("../db/LEA_IA17_097_TEST.accdb")
 
 
-async def get_rows(sql: str, args: list = None):
+def read_sql_file(sql_path: Path) -> str:
+    """from Arjan Codes: Raw SQL, SQL Query Builder, or ORM?"""
+    return Path(sql_path).read_text()
 
+
+async def get_rows(sql: str, args: list = None):
     constring = "DRIVER={{Microsoft Access Driver (*.mdb, *.accdb)}};DBQ={}"
     results = []
     async with aioodbc.connect(dsn=constring.format(SRC_DB)) as conn:
@@ -24,7 +31,16 @@ async def get_rows(sql: str, args: list = None):
     return results
 
 
-async def get_data(sql:str, names, values):
+async def run_sql(sql: str, values: list):
+    """used for queries that don't return records - delete, post, put"""
+
+    constring = "DRIVER={{Microsoft Access Driver (*.mdb, *.accdb)}};DBQ={}"
+    async with aioodbc.connect(dsn=constring.format(SRC_DB)) as conn:
+        async with conn.cursor() as cur:
+            await cur.execute(sql, values)
+
+
+async def get_data(sql: str, names, values):
     """build the where clause from the the values in names and values
     and tack it onto the sql statement before executing the sql
     statement.
@@ -51,3 +67,20 @@ def args_to_where(names: list[str], values: list[Union[str, int, None]]) -> str:
     args = [f"[{nm}]=?" for nm, val in zip(names, values) if val is not None]
     joined = " AND ".join(args)
     return f" WHERE {joined}"
+
+
+def get_data_values(data):
+    """Given a data class incstance, return the its values as a list"""
+
+    return [v for k, v in data.__dict__.items()]
+
+
+def update_clause(data):
+    """Given a partial data class used for sql updates, build the
+    update clause by returing the list of keys (field names) of the
+    form [<key>]=? as a single comma separated list.
+
+    """
+    updates = ",".join([f"[{k}]=?" for k, v in data.__dict__.items()])
+
+    return updates
