@@ -15,6 +15,6 @@ from .FN125 import FN125
 from .FN125Lamprey import FN125Lamprey
 from .FN125Tag import FN125Tag
 from .FN126 import FN126, FN126Partial
-from .FN127 import FN127
+from .FN127 import FN127, FN127Partial
 from .GrEffProcType import GrEffProcType
 from .StreamDimension import StreamDimension

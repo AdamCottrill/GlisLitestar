@@ -1,4 +1,3 @@
-import pdb
 from litestar import Controller, get, post, delete, patch
 from typing import Optional, Union
 from schemas import FN126, FN126Partial
@@ -44,17 +43,6 @@ class FN126Controller(Controller):
         data = await get_rows(sql, [prj_cd, sam, eff, spc, grp, fish, food])
 
         return data
-
-    @delete(
-        "/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}/{fish:str}/{food:int}"
-    )
-    async def fn126_delete(
-        self, prj_cd: str, sam: str, eff: str, spc: str, grp: str, fish: str, food: int
-    ) -> None:
-        sql = read_sql_file("controllers/sql/FN126/delete_item.sql")
-        await run_sql(sql, [prj_cd, sam, eff, spc, grp, fish, food])
-
-        return None
 
     @post("/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}/{fish:str}/{food:int}")
     async def fn126_create(
@@ -111,3 +99,14 @@ class FN126Controller(Controller):
         data = await get_rows(sql, keyfields)
 
         return data
+
+    @delete(
+        "/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}/{fish:str}/{food:int}"
+    )
+    async def fn126_delete(
+        self, prj_cd: str, sam: str, eff: str, spc: str, grp: str, fish: str, food: int
+    ) -> None:
+        sql = read_sql_file("controllers/sql/FN126/delete_item.sql")
+        await run_sql(sql, [prj_cd, sam, eff, spc, grp, fish, food])
+
+        return None

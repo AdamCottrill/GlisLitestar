@@ -1,0 +1,20 @@
+insert into [FN127] (
+     [PRJ_CD],
+     [SAM],
+     [EFF],
+     [SPC],
+     [GRP],
+     [FISH],
+     [AGEID],
+     [PREFERRED],
+     [AGEA],
+     [AGEMT],
+     [EDGE],
+     [CONF],
+     [NCA],
+     [AGESTRM],
+     [AGELAKE],
+     [SPAWNCHKCNT],
+     [AGE_FAIL],
+     [COMMENT7]
+) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
