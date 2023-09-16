@@ -7,7 +7,7 @@ from .FN028 import FN028
 from .FN121 import FN121
 from .FN121Electrofishing import FN121Electrofishing
 from .FN121GpsTrack import FN121GpsTrack
-from .FN122 import FN122
+from .FN122 import FN122, FN122Partial
 from .FN123 import FN123, FN123Partial
 from .FN123NonFish import FN123NonFish, FN123NonFishPartial
 from .FN124 import FN124, FN124Partial
