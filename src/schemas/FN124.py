@@ -1,3 +1,4 @@
+from typing import Optional
 from dataclasses import dataclass
 
 
@@ -9,5 +10,11 @@ class FN124:
     spc: str
     grp: str
     siz: str
-    sizcnt: str
-    comment4: str
+    sizcnt: int
+    comment4: Optional[str] = None
+
+
+@dataclass
+class FN124Partial:
+    sizcnt: Optional[int] = None
+    comment4: Optional[str] = None
