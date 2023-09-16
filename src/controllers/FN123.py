@@ -31,7 +31,6 @@ class FN123Controller(Controller):
         values = [prj_cd, sam, eff, spc, grp]
 
         sql = read_sql_file("controllers/sql/FN123/get_item_list.sql")
-
         data = await get_data(sql, names, values)
 
         return data

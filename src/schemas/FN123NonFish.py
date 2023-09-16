@@ -1,3 +1,4 @@
+from typing import Optional
 from dataclasses import dataclass
 
 
@@ -8,5 +9,12 @@ class FN123NonFish:
     eff: str
     taxon: str
     catcnt: int
-    mortcnt: int
-    comment3: str
+    mortcnt: Optional[int] = None
+    comment3: Optional[str] = None
+
+
+@dataclass
+class FN123NonFishPartial:
+    catcnt: Optional[int] = None
+    mortcnt: Optional[int] = None
+    comment3: Optional[str] = None
