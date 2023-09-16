@@ -1,6 +1,6 @@
 from typing import Optional, Union
 
-from litestar import Controller, delete, get, patch, post
+from litestar import Controller, delete, get, patch, post, put
 from schemas import FN126, FN126Partial
 from utils import (
     get_data,
@@ -45,8 +45,18 @@ class FN126Controller(Controller):
 
         return data
 
-    @post("/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}/{fish:str}/{food:int}")
+    @post("/")
     async def fn126_create(
+        self,
+        data: FN126,
+    ) -> Union[FN126, None]:
+        sql = read_sql_file("controllers/sql/FN126/create_item.sql")
+        values = get_data_values(data)
+        await run_sql(sql, values)
+        return data
+
+    @put("/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}/{fish:str}/{food:int}")
+    async def fn126_put(
         self,
         data: FN126,
         prj_cd: str,
@@ -57,9 +67,24 @@ class FN126Controller(Controller):
         fish: str,
         food: int,
     ) -> Union[FN126, None]:
-        sql = read_sql_file("controllers/sql/FN126/create_item.sql")
+        key_fields = [prj_cd, sam, eff, spc, grp, fish, food]
         values = get_data_values(data)
-        await run_sql(sql, values)
+        updates = update_clause(data)
+
+        sql = f"""
+        Update [FN126] set
+        {updates}
+        where
+        [prj_cd]=? and
+        [sam]=? and
+        [eff]=? and
+        [spc]=? and
+        [grp]=? and
+        [fish]=? and
+        [food]=?
+        """
+        params = values + key_fields
+        await run_sql(sql, params)
 
         return data
 

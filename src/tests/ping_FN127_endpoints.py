@@ -8,7 +8,7 @@ eff = "032"
 spc = "331"
 grp = "00"
 fish = "39750"
-ageid = 22
+ageid = 26
 
 
 root_url = "http://127.0.0.1:8000/api/fn127/"
@@ -46,10 +46,39 @@ data = {
 }
 
 print("creating new fn127 object...")
-response = requests.post(url, json=data)
+print("POSTing to", root_url)
+response = requests.post(root_url, json=data)
 print(response)
 pprint(response.json())
 assert response.status_code == 201
+
+
+data = {
+    "prj_cd": prj_cd,
+    "sam": sam,
+    "eff": eff,
+    "spc": spc,
+    "grp": grp,
+    "fish": fish,
+    "ageid": ageid,
+    "preferred": 1,
+    "agea": 2,
+    "agemt": "111PD",
+    "edge": None,
+    "conf": None,
+    "nca": None,
+    "agestrm": None,
+    "agelake": None,
+    "spawnchkcnt": None,
+    "age_fail": None,
+    "comment7": "Replaced with a PUT request.",
+}
+
+print("Update whole object with PUT request ...")
+response = requests.put(url, json=data)
+print(response)
+pprint(response.json())
+assert response.status_code == 200
 
 
 print("updating an existing  fn127 object with agea=12...")

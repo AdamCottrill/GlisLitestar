@@ -55,19 +55,10 @@ class FN125TagController(Controller):
 
         return data
 
-    @post(
-        "/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}/{fish:str}/{fish_tag_id:int}"
-    )
+    @post("/")
     async def fn125Tag_create(
         self,
         data: FN125Tag,
-        prj_cd: str,
-        sam: str,
-        eff: str,
-        spc: str,
-        grp: str,
-        fish: str,
-        fish_tag_id: int,
     ) -> Union[FN125Tag, None]:
         sql = read_sql_file("controllers/sql/FN125Tag/create_item.sql")
         values = get_data_values(data)

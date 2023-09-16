@@ -41,7 +41,7 @@ data = {
 }
 
 print("creating new fn125_tag object...")
-response = requests.post(url, json=data)
+response = requests.post(root_url, json=data)
 print(response)
 pprint(response.json())
 assert response.status_code == 201
