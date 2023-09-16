@@ -1,8 +1,15 @@
-from litestar import Controller, get
-from typing import Optional
+from litestar import Controller, get, post, put, patch, delete
+from typing import Optional, Union
 
-from schemas import FN123
-from utils import get_rows, get_data
+from schemas import FN123, FN123Partial
+from utils import (
+    get_rows,
+    get_data,
+    read_sql_file,
+    get_data_values,
+    run_sql,
+    update_clause,
+)
 
 
 class FN123Controller(Controller):
@@ -23,18 +30,7 @@ class FN123Controller(Controller):
         names = ["prj_cd", "sam", "eff", "spc", "grp"]
         values = [prj_cd, sam, eff, spc, grp]
 
-        sql = """SELECT [PRJ_CD],
-             [SAM],
-             [EFF],
-             [SPC],
-             [GRP],
-             [CATCNT],
-             [BIOCNT],
-             [CATWT],
-             [SUBCNT],
-             [SUBWT],
-             [COMMENT3]
-        FROM FN123"""
+        sql = read_sql_file("controllers/sql/FN123/get_item_list.sql")
 
         data = await get_data(sql, names, values)
 
@@ -49,19 +45,95 @@ class FN123Controller(Controller):
         spc: str,
         grp: str,
     ) -> FN123:
-        sql = """SELECT [PRJ_CD],
-             [SAM],
-             [EFF],
-             [SPC],
-             [GRP],
-             [CATCNT],
-             [BIOCNT],
-             [CATWT],
-             [SUBCNT],
-             [SUBWT],
-             [COMMENT3]
-        FROM FN123 where prj_cd=? and sam=? and eff=? and spc=? and grp=?"""
+        sql = read_sql_file("controllers/sql/FN123/get_item.sql")
 
         data = await get_rows(sql, [prj_cd, sam, eff, spc, grp])
 
         return data
+
+    @post("/")
+    async def fn123_create(
+        self,
+        data: FN123,
+    ) -> Union[FN123, None]:
+        sql = read_sql_file("controllers/sql/FN123/create_item.sql")
+        values = get_data_values(data)
+
+        await run_sql(sql, values)
+
+        return data
+
+    @put("/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}")
+    async def fn123_put(
+        self,
+        data: FN123,
+        prj_cd: str,
+        sam: str,
+        eff: str,
+        spc: str,
+        grp: str,
+    ) -> Union[FN123, None]:
+        key_fields = [prj_cd, sam, eff, spc, grp]
+        values = get_data_values(data)
+        updates = update_clause(data)
+
+        sql = f"""
+        Update [FN123] set
+        {updates}
+        where
+        [prj_cd]=? and
+        [sam]=? and
+        [eff]=? and
+        [spc]=? and
+        [grp]=?
+        """
+        params = values + key_fields
+        await run_sql(sql, params)
+
+        return data
+
+    @patch("/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}")
+    async def fn123_patch(
+        self,
+        data: FN123Partial,
+        prj_cd: str,
+        sam: str,
+        eff: str,
+        spc: str,
+        grp: str,
+    ) -> Union[FN123, None]:
+        key_fields = [prj_cd, sam, eff, spc, grp]
+        values = get_data_values(data)
+        updates = update_clause(data)
+
+        sql = f"""
+        Update [FN123] set
+        {updates}
+        where
+        [prj_cd]=? and
+        [sam]=? and
+        [eff]=? and
+        [spc]=? and
+        [grp]=?
+        """
+        params = values + key_fields
+        await run_sql(sql, params)
+
+        sql = read_sql_file("controllers/sql/FN123/get_item.sql")
+        data = await get_rows(sql, key_fields)
+
+        return data
+
+    @delete("/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}")
+    async def fn123_delete(
+        self,
+        prj_cd: str,
+        sam: str,
+        eff: str,
+        spc: str,
+        grp: str,
+    ) -> None:
+        sql = read_sql_file("controllers/sql/FN123/delete_item.sql")
+        await run_sql(sql, [prj_cd, sam, eff, spc, grp])
+
+        return None

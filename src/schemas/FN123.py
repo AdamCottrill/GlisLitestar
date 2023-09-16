@@ -1,3 +1,4 @@
+from typing import Optional
 from dataclasses import dataclass
 
 
@@ -10,7 +11,17 @@ class FN123:
     grp: str
     catcnt: int
     biocnt: int
-    catwt: float
-    subcnt: int
-    subwt: float
-    comment3: str
+    catwt: Optional[float] = None
+    subcnt: Optional[int] = None
+    subwt: Optional[float] = None
+    comment3: Optional[str] = None
+
+
+@dataclass
+class FN123Partial:
+    catcnt: Optional[int] = None
+    biocnt: Optional[int] = None
+    catwt: Optional[float] = None
+    subcnt: Optional[int] = None
+    subwt: Optional[float] = None
+    comment3: Optional[str] = None
