@@ -1,3 +1,4 @@
+from typing import Optional
 from dataclasses import dataclass
 
 
@@ -9,8 +10,16 @@ class FN125Lamprey:
     spc: str
     grp: str
     fish: str
-    lamid: str
-    xlam: str
-    lamijc_type: str
-    lamijc_size: str
-    comment_lam: str
+    lamid: int
+    xlam: Optional[str] = None
+    lamijc_type: Optional[str] = None
+    lamijc_size: Optional[int] = None
+    comment_lam: Optional[str] = None
+
+
+@dataclass
+class FN125LampreyPartial:
+    xlam: Optional[str] = None
+    lamijc_type: Optional[str] = None
+    lamijc_size: Optional[int] = None
+    comment_lam: Optional[str] = None
