@@ -13,7 +13,7 @@ from .FN123NonFish import FN123NonFish
 from .FN124 import FN124
 from .FN125 import FN125
 from .FN125Lamprey import FN125Lamprey
-from .FN125Tag import FN125Tag
+from .FN125Tag import FN125Tag, FN125TagPartial
 from .FN126 import FN126, FN126Partial
 from .FN127 import FN127, FN127Partial
 from .GrEffProcType import GrEffProcType
