@@ -9,7 +9,7 @@ eff = "032"
 spc = "331"
 grp = "00"
 fish = "39750"
-food = 46
+food = 53
 
 
 root_url = "http://127.0.0.1:8000/api/fn126/"
@@ -82,17 +82,6 @@ response = requests.get(url)
 print(response)
 pprint(response.json())
 assert response.status_code == 200
-
-
-# PATCH REQUEST
-
-print("updating an existing  fn126 object with fdcnt=200...")
-response = requests.patch(
-    url, json={"fdcnt": 200, "comment6": "something more informative"}
-)
-print(response)
-assert response.status_code == 200
-pprint(response.json())
 
 
 # DELETE REQUEST

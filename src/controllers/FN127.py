@@ -1,6 +1,8 @@
+import pdb
 from typing import Optional, Union
-from litestar import Controller, delete, get, patch, post, put
-from schemas import FN127, FN127Partial
+from litestar import Controller, delete, get, post, put
+from schemas import FN127
+from .FishnetTables import FN127 as FN127Table
 from utils import (
     get_data,
     get_data_values,
@@ -29,7 +31,7 @@ class FN127Controller(Controller):
         names = ["prj_cd", "sam", "eff", "spc", "grp", "fish", "ageid"]
         values = [prj_cd, sam, eff, spc, grp, fish, ageid]
 
-        sql = read_sql_file("controllers/sql/FN127/get_item_list.sql")
+        sql = FN127Table.select(order_by_keys=False)
 
         data = await get_data(sql, names, values)
 
@@ -39,8 +41,7 @@ class FN127Controller(Controller):
     async def fn127_detail(
         self, prj_cd: str, sam: str, eff: str, spc: str, grp: str, fish: str, ageid: str
     ) -> Union[FN127, None]:
-        sql = read_sql_file("controllers/sql/FN126/get_item.sql")
-
+        sql = FN127Table.select_one()
         data = await get_rows(sql, [prj_cd, sam, eff, spc, grp, fish, ageid])
 
         return data
@@ -50,8 +51,9 @@ class FN127Controller(Controller):
         self,
         data: FN127,
     ) -> Union[FN127, None]:
-        sql = read_sql_file("controllers/sql/FN127/create_item.sql")
+        sql = FN127Table.create()
         values = get_data_values(data)
+
         await run_sql(sql, values)
 
         return data
@@ -70,63 +72,52 @@ class FN127Controller(Controller):
     ) -> Union[FN127, None]:
         key_fields = [prj_cd, sam, eff, spc, grp, fish, ageid]
         values = get_data_values(data)
-        updates = update_clause(data)
 
-        sql = f"""
-        Update [FN127] set
-        {updates}
-        where
-        [prj_cd]=? and
-        [sam]=? and
-        [eff]=? and
-        [spc]=? and
-        [grp]=? and
-        [fish]=? and
-        [ageid]=?
-        """
+        sql = FN127Table.update_one(data.__dict__)
         params = values + key_fields
+
         await run_sql(sql, params)
 
         return data
 
-    @patch(
-        "/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}/{fish:str}/{ageid:int}"
-    )
-    async def fn127_patch(
-        self,
-        data: FN127Partial,
-        prj_cd: str,
-        sam: str,
-        eff: str,
-        spc: str,
-        grp: str,
-        fish: str,
-        ageid: int,
-    ) -> Union[FN127, None]:
-        keyfields = [prj_cd, sam, eff, spc, grp, fish, ageid]
+    # @patch(
+    #     "/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}/{fish:str}/{ageid:int}"
+    # )
+    # async def fn127_patch(
+    #     self,
+    #     data: FN127Patch,
+    #     prj_cd: str,
+    #     sam: str,
+    #     eff: str,
+    #     spc: str,
+    #     grp: str,
+    #     fish: str,
+    #     ageid: int,
+    # ) -> Union[FN127, None]:
+    #     keyfields = [prj_cd, sam, eff, spc, grp, fish, ageid]
 
-        values = get_data_values(data)
-        updates = update_clause(data)
+    #     values = get_data_values(data)
+    #     updates = update_clause(data)
 
-        sql = f"""
-        Update [FN127] set
-        {updates}
-        where
-        [prj_cd]=? and
-        [sam]=? and
-        [eff]=? and
-        [spc]=? and
-        [grp]=? and
-        [fish]=? and
-        [ageid]=?
-        """
-        params = values + keyfields
-        await run_sql(sql, params)
+    #     sql = f"""
+    #     Update [FN127] set
+    #     {updates}
+    #     where
+    #     [prj_cd]=? and
+    #     [sam]=? and
+    #     [eff]=? and
+    #     [spc]=? and
+    #     [grp]=? and
+    #     [fish]=? and
+    #     [ageid]=?
+    #     """
+    #     params = values + keyfields
+    #     await run_sql(sql, params)
 
-        sql = read_sql_file("controllers/sql/FN127/get_item.sql")
-        data = await get_rows(sql, keyfields)
+    #     sql = read_sql_file("controllers/sql/FN127/get_item.sql")
+    #     data = await get_rows(sql, keyfields)
 
-        return data
+    #     return data
 
     @delete(
         "/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}/{fish:str}/{ageid:int}"
@@ -134,7 +125,8 @@ class FN127Controller(Controller):
     async def fn127_delete(
         self, prj_cd: str, sam: str, eff: str, spc: str, grp: str, fish: str, ageid: int
     ) -> None:
-        sql = read_sql_file("controllers/sql/FN127/delete_item.sql")
+        sql = FN127Table.delete_one()
+
         await run_sql(sql, [prj_cd, sam, eff, spc, grp, fish, ageid])
 
         return None

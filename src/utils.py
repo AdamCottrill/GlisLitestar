@@ -11,7 +11,11 @@ SRC_DB = os.path.abspath("../db/LEA_IA17_097_TEST.accdb")
 
 
 def read_sql_file(sql_path: Path) -> str:
-    """from Arjan Codes: Raw SQL, SQL Query Builder, or ORM?"""
+    """from Arjan Codes: Raw SQL, SQL Query Builder, or ORM?
+
+    NOT NEEDED AFTER FishNetDataTable is fully adopted
+
+    """
     return Path(sql_path).read_text()
 
 
@@ -71,9 +75,14 @@ def args_to_where(names: list[str], values: list[Union[str, int, None]]) -> str:
 
 
 def get_data_values(data):
-    """Given a data class incstance, return the its values as a list"""
+    """Given a data class instance, return the its values as a list"""
 
-    return [v for k, v in data.__dict__.items()]
+    if hasattr(data, "dict"):
+        # pydantic
+        return [v for k, v in data.dict().items()]
+    else:
+        # msgspect
+        return [v for k, v in data.__dict__.items()]
 
 
 def update_clause(data):
@@ -81,7 +90,17 @@ def update_clause(data):
     update clause by returing the list of keys (field names) of the
     form [<key>]=? as a single comma separated list.
 
+    NOT NEEDED AFTER FishNetDataTable is fully adopted
+
     """
-    updates = ",".join([f"[{k}]=?" for k, v in data.__dict__.items()])
+
+    if hasattr(data, "dict"):
+        # pydantic
+        updates = ",".join(
+            [f"[{k}]=?" for k, v in data.dict().items() if v is not None]
+        )
+    else:
+        # msgspect
+        updates = ",".join([f"[{k}]=?" for k, v in data.__dict__.items()])
 
     return updates

@@ -44,7 +44,7 @@ class FishNetDbTable:
     def update_one(self, values: dict) -> str:
         # TODO - verify that the fields are in the model
         # how do we know if the value should be set to NULL or wasn't specified?
-        updates = ",".join([f"[{k}]=?" for k, v in values.items() if v is not None])
+        updates = ",".join([f"[{k}]=?" for k in values.keys()])
 
         sql = f"""
         Update [{self.table_name}] set

@@ -1,14 +1,13 @@
 from typing import Optional, Union
 
-from litestar import Controller, delete, get, patch, post, put
-from schemas import FN126, FN126Partial
+from litestar import Controller, delete, get, post, put
+from schemas import FN126
+from .FishnetTables import FN126 as FN126Table
 from utils import (
     get_data,
     get_data_values,
     get_rows,
-    read_sql_file,
     run_sql,
-    update_clause,
 )
 
 
@@ -30,8 +29,7 @@ class FN126Controller(Controller):
         names = ["prj_cd", "sam", "eff", "spc", "grp", "fish", "food"]
         values = [prj_cd, sam, eff, spc, grp, fish, food]
 
-        sql = read_sql_file("controllers/sql/FN126/get_item_list.sql")
-
+        sql = FN126Table.select(order_by_keys=False)
         data = await get_data(sql, names, values)
 
         return data
@@ -40,7 +38,7 @@ class FN126Controller(Controller):
     async def fn126_detail(
         self, prj_cd: str, sam: str, eff: str, spc: str, grp: str, fish: str, food: int
     ) -> Union[FN126, None]:
-        sql = read_sql_file("controllers/sql/FN126/get_item.sql")
+        sql = FN126Table.select_one()
         data = await get_rows(sql, [prj_cd, sam, eff, spc, grp, fish, food])
 
         return data
@@ -50,7 +48,7 @@ class FN126Controller(Controller):
         self,
         data: FN126,
     ) -> Union[FN126, None]:
-        sql = read_sql_file("controllers/sql/FN126/create_item.sql")
+        sql = FN126Table.create()
         values = get_data_values(data)
         await run_sql(sql, values)
         return data
@@ -69,60 +67,11 @@ class FN126Controller(Controller):
     ) -> Union[FN126, None]:
         key_fields = [prj_cd, sam, eff, spc, grp, fish, food]
         values = get_data_values(data)
-        updates = update_clause(data)
 
-        sql = f"""
-        Update [FN126] set
-        {updates}
-        where
-        [prj_cd]=? and
-        [sam]=? and
-        [eff]=? and
-        [spc]=? and
-        [grp]=? and
-        [fish]=? and
-        [food]=?
-        """
+        sql = FN126Table.update_one(data.__dict__)
+
         params = values + key_fields
         await run_sql(sql, params)
-
-        return data
-
-    @patch(
-        "/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}/{fish:str}/{food:int}"
-    )
-    async def fn126_patch(
-        self,
-        data: FN126Partial,
-        prj_cd: str,
-        sam: str,
-        eff: str,
-        spc: str,
-        grp: str,
-        fish: str,
-        food: int,
-    ) -> Union[FN126, None]:
-        keyfields = [prj_cd, sam, eff, spc, grp, fish, food]
-        values = get_data_values(data)
-        updates = update_clause(data)
-
-        sql = f"""
-        Update [FN126] set
-        {updates}
-        where
-        [prj_cd]=? and
-        [sam]=? and
-        [eff]=? and
-        [spc]=? and
-        [grp]=? and
-        [fish]=? and
-        [food]=?
-        """
-        params = values + keyfields
-        await run_sql(sql, params)
-
-        sql = read_sql_file("controllers/sql/FN126/get_item.sql")
-        data = await get_rows(sql, keyfields)
 
         return data
 
@@ -132,7 +81,8 @@ class FN126Controller(Controller):
     async def fn126_delete(
         self, prj_cd: str, sam: str, eff: str, spc: str, grp: str, fish: str, food: int
     ) -> None:
-        sql = read_sql_file("controllers/sql/FN126/delete_item.sql")
+        # sql = read_sql_file("controllers/sql/FN126/delete_item.sql")
+        sql = FN126Table.delete_one()
         await run_sql(sql, [prj_cd, sam, eff, spc, grp, fish, food])
 
         return None
