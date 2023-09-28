@@ -1,4 +1,5 @@
 import requests
+import sys
 from pprint import pprint
 
 domain = "http://127.0.0.1:8000"
@@ -9,7 +10,7 @@ eff = "114"
 spc = "081"
 grp = "00"
 fish = "54"
-lamid = 4
+lamid = int(sys.argv[1])
 
 
 root_url = "http://127.0.0.1:8000/api/fn125_lamprey/"
@@ -67,13 +68,13 @@ pprint(response.json())
 assert response.status_code == 200
 
 
-print("updating an existing  fn125_lamprey object with agea=12...")
-response = requests.patch(
-    url, json={"lamijc_type": "A1", "comment_lam": "something more informative"}
-)
-print(response)
-pprint(response.json())
-assert response.status_code == 200
+# print("updating an existing  fn125_lamprey object with agea=12...")
+# response = requests.patch(
+#     url, json={"lamijc_type": "A1", "comment_lam": "something more informative"}
+# )
+# print(response)
+# pprint(response.json())
+# assert response.status_code == 200
 
 print("Deleting our new  fn125_lamprey object...")
 response = requests.delete(url)

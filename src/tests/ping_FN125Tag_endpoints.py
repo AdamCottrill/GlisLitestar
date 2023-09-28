@@ -1,5 +1,6 @@
 import requests
 from pprint import pprint
+import sys
 
 domain = "http://127.0.0.1:8000"
 
@@ -9,7 +10,7 @@ eff = "114"
 spc = "081"
 grp = "00"
 fish = "54"
-fish_tag_id = 17
+fish_tag_id = int(sys.argv[1])
 
 
 root_url = "http://127.0.0.1:8000/api/fn125_tag/"
@@ -56,7 +57,7 @@ data = {
     "fish": fish,
     "fish_tag_id": fish_tag_id,
     "tagid": "63-01-57",
-    "tagdoc": "63144",
+    "tagdoc": "63134",
     "tagstat": "A",
     "cwtseq": 12345,
     "comment_tag": "Test PUT Request",
@@ -69,13 +70,13 @@ pprint(response.json())
 assert response.status_code == 200
 
 
-print("updating an existing  fn125_tag object with agea=12...")
-response = requests.patch(
-    url, json={"tagid": "65982", "comment_tag": "something more informative"}
-)
-print(response)
-pprint(response.json())
-assert response.status_code == 200
+# print("updating an existing  fn125_tag object with agea=12...")
+# response = requests.patch(
+#     url, json={"tagid": "65982", "comment_tag": "something more informative"}
+# )
+# print(response)
+# pprint(response.json())
+# assert response.status_code == 200
 
 print("Deleting our new  fn125_tag object...")
 response = requests.delete(url)

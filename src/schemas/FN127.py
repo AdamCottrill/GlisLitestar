@@ -42,9 +42,9 @@
 from enum import Enum
 from typing import Optional
 
-from pydantic import constr, conint, validator
+from pydantic import constr, conint, field_validator
 from .FNBase import FNBase
-from .utils import string_to_int, empty_to_none
+from .utils import PRJ_CD_REGEX, string_to_int, empty_to_none
 
 
 AGEST_CHOICES = [
@@ -100,11 +100,11 @@ class FN127(FNBase):
 
     """
 
-    prj_cd: str
+    prj_cd: constr(pattern=PRJ_CD_REGEX)
     sam: str
-    eff: str
-    spc: str
-    grp: str
+    eff: constr(pattern="^([A-Z0-9]{3})$")
+    spc: constr(pattern="^([A-Z0-9]{3})$")
+    grp: constr(pattern="^([A-Z0-9]{2})$")
     fish: str
     ageid: int
     preferred: bool
@@ -121,15 +121,13 @@ class FN127(FNBase):
 
     comment7: Optional[str] = None
 
-    _string_to_int = validator("agea", "conf", "nca", allow_reuse=True, pre=True)(
+    _string_to_int = field_validator("agea", "conf", "nca", mode="before")(
         string_to_int
     )
 
-    _empty_to_none = validator("edge", "age_fail", allow_reuse=True, pre=True)(
-        empty_to_none
-    )
+    _empty_to_none = field_validator("edge", "age_fail", mode="before")(empty_to_none)
 
-    @validator("agemt", allow_reuse=True)
+    @field_validator("agemt")
     @classmethod
     def check_agemt_structure(cls, value, values):
         if value is not None:
@@ -139,7 +137,7 @@ class FN127(FNBase):
                 raise ValueError(msg)
         return value
 
-    @validator("agemt", allow_reuse=True)
+    @field_validator("agemt")
     @classmethod
     def check_agemt_prep1(cls, value, values):
         if value is not None:
@@ -149,7 +147,7 @@ class FN127(FNBase):
                 raise ValueError(msg)
         return value
 
-    @validator("agemt", allow_reuse=True)
+    @field_validator("agemt")
     @classmethod
     def check_agemt_prep2(cls, value, values):
         if value is not None:

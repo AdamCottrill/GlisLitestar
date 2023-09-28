@@ -1,5 +1,7 @@
 from typing import Optional
 
+PRJ_CD_REGEX = r"[A-Z0-9]{3}_[A-Z]{2}\d{2}_[A-Z0-9]{3}"
+
 
 def string_to_float(v) -> Optional[float]:
     """A validator that will convert floats passed in as strings to a
