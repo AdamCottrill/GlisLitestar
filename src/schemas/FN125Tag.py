@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import constr, field_validator, PositiveInt, constr
 from .FNBase import FNBase
-from .utils import string_to_int, PRJ_CD_REGEX
+from .utils import string_to_int, PRJ_CD_REGEX, val_to_string
 
 
 tag_type_choices = {
@@ -109,13 +109,13 @@ class FN125Tag(FNBase):
 
     comment_tag: Optional[str]
 
+    _val_to_str = field_validator("tagid", mode="before")(val_to_string)
     _string_to_int = field_validator("cwtseq", mode="before")(string_to_int)
 
     @field_validator("tagstat")
-    @classmethod
     def check_tagstat_n(cls, value, values):
         """Tag stat N (checked and not found) is only appropriate for pit or cwts."""
-        tagdoc = values.get("tagdoc")
+        tagdoc = values.data.get("tagdoc")
         if tagdoc and value == "N":
             if tagdoc[0] not in ["P", "6"]:
                 msg = "TAGSTAT='N' is only allowed if TAGTYPE is 6 (CWT) or P (PIT)."
@@ -123,29 +123,28 @@ class FN125Tag(FNBase):
         return value
 
     @field_validator("tagstat")
-    @classmethod
+
     def check_null_tagid_if_tagstat_n(cls, value, values):
         """If tag stat is 'N' - tagid must be null. If you have a
         tagid, the tag was either applied or present on capture."""
-        tagid = values["tagid"]
+        tagid = values.data.get("tagid")
         if tagid and value == "N":
             msg = f"TAGSTAT cannot be 'N' if TAGID is populated (TAGID='{tagid}')."
             raise ValueError(msg)
         return value
 
     @field_validator("tagstat")
-    @classmethod
+
     def check_null_tagid_if_tagstat_a(cls, value, values):
         """If tag stat is 'N' - tagid must be null. If you have a
         tagid, the tag was either applied or present on capture."""
-        tagid = values["tagid"]
+        tagid = values.data.get("tagid")
         if tagid is None and value == "A":
             msg = f"TAGID cannot be empty if TAGSTAT='A' (tag applied)."
             raise ValueError(msg)
         return value
 
     @field_validator("tagdoc")
-    @classmethod
     def check_tag_type(cls, value, values):
         if value is not None:
             tag_type = value[0]
@@ -155,7 +154,7 @@ class FN125Tag(FNBase):
         return value
 
     @field_validator("tagdoc")
-    @classmethod
+
     def check_tag_position(cls, value, values):
         if value is not None:
             tag_position = value[1]
@@ -165,7 +164,7 @@ class FN125Tag(FNBase):
         return value
 
     @field_validator("tagdoc")
-    @classmethod
+
     def check_tag_agency(cls, value, values):
         if value is not None:
             agency = value[2:4]
@@ -175,7 +174,7 @@ class FN125Tag(FNBase):
         return value
 
     @field_validator("tagdoc")
-    @classmethod
+
     def check_tag_colour(cls, value, values):
         if value is not None:
             tag_colour = value[4]
