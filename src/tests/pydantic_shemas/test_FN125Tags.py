@@ -41,7 +41,7 @@ def data():
         "eff": "114",
         "spc": "081",
         "grp": "00",
-        "fish": 1,
+        "fish": "1",
         "fish_tag_id": 1,
         "tagid": "123654A",
         "tagdoc": "25012",
@@ -62,6 +62,11 @@ def test_valid_data(data):
 
     assert item.prj_cd == data["prj_cd"]
     assert item.sam == data["sam"]
+    assert item.eff == data["eff"]
+    assert item.spc == data["spc"]
+    assert item.grp == data["grp"]
+    assert item.fish == data["fish"]
+    assert item.fish_tag_id == data["fish_tag_id"]
 
 
 required_fields = [
@@ -70,7 +75,7 @@ required_fields = [
     ("eff","string"),
     ("spc","string"),
     ("grp","string"),
-    ("fish","integer"),
+    ("fish","string"),
     ("fish_tag_id","integer"),
     ("tagdoc","string"),
     ("tagstat","string"),

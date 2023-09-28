@@ -93,7 +93,7 @@ class FN125Tag(FNBase):
     eff: constr(pattern="^([A-Z0-9]{3})$")
     spc: constr(pattern="^([A-Z0-9]{3})$")
     grp: constr(pattern="^([A-Z0-9]{2})$")
-    fish: int
+    fish: str
     fish_tag_id: int
     tagid: Optional[str]
     tagdoc: constr(pattern="^([A-Z0-9]{5})$", to_upper=True, min_length=5, max_length=5)

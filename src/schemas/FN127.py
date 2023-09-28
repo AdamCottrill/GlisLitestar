@@ -128,8 +128,7 @@ class FN127(FNBase):
     _empty_to_none = field_validator("edge", "age_fail", mode="before")(empty_to_none)
 
     @field_validator("agemt")
-    @classmethod
-    def check_agemt_structure(cls, value, values):
+    def check_agemt_structure(value, values):
         if value is not None:
             structure = value[0]
             if structure not in AGEST_CHOICES:
@@ -138,8 +137,7 @@ class FN127(FNBase):
         return value
 
     @field_validator("agemt")
-    @classmethod
-    def check_agemt_prep1(cls, value, values):
+    def check_agemt_prep1(value, values):
         if value is not None:
             prep = value[1]
             if prep not in AGEPREP1_CHOICES:
@@ -148,8 +146,7 @@ class FN127(FNBase):
         return value
 
     @field_validator("agemt")
-    @classmethod
-    def check_agemt_prep2(cls, value, values):
+    def check_agemt_prep2(value, values):
         if value is not None:
             prep = value[2]
             if prep not in AGEPREP2_CHOICES:
