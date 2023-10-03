@@ -93,7 +93,7 @@ class FN125Tag(FNBase):
     eff: constr(pattern="^([A-Z0-9]{3})$")
     spc: constr(pattern="^([A-Z0-9]{3})$")
     grp: constr(pattern="^([A-Z0-9]{2})$")
-    fish: str
+    fish: constr(max_length=6, to_upper=True, pattern=r"^[0-9A-Z]{1,6}$")
     fish_tag_id: int
     tagid: Optional[str]
     tagdoc: constr(pattern="^([A-Z0-9]{5})$", to_upper=True, min_length=5, max_length=5)
@@ -123,7 +123,6 @@ class FN125Tag(FNBase):
         return value
 
     @field_validator("tagstat")
-
     def check_null_tagid_if_tagstat_n(cls, value, values):
         """If tag stat is 'N' - tagid must be null. If you have a
         tagid, the tag was either applied or present on capture."""
@@ -134,7 +133,6 @@ class FN125Tag(FNBase):
         return value
 
     @field_validator("tagstat")
-
     def check_null_tagid_if_tagstat_a(cls, value, values):
         """If tag stat is 'N' - tagid must be null. If you have a
         tagid, the tag was either applied or present on capture."""
@@ -154,7 +152,6 @@ class FN125Tag(FNBase):
         return value
 
     @field_validator("tagdoc")
-
     def check_tag_position(cls, value, values):
         if value is not None:
             tag_position = value[1]
@@ -164,7 +161,6 @@ class FN125Tag(FNBase):
         return value
 
     @field_validator("tagdoc")
-
     def check_tag_agency(cls, value, values):
         if value is not None:
             agency = value[2:4]
@@ -174,7 +170,6 @@ class FN125Tag(FNBase):
         return value
 
     @field_validator("tagdoc")
-
     def check_tag_colour(cls, value, values):
         if value is not None:
             tag_colour = value[4]

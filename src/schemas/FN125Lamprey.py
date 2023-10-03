@@ -1,30 +1,3 @@
-#from typing import Optional
-#from dataclasses import dataclass
-#
-#
-#@dataclass
-#class FN125Lamprey:
-#    prj_cd: str
-#    sam: str
-#    eff: str
-#    spc: str
-#    grp: str
-#    fish: str
-#    lamid: int
-#    xlam: Optional[str] = None
-#    lamijc_type: Optional[str] = None
-#    lamijc_size: Optional[int] = None
-#    comment_lam: Optional[str] = None
-#
-#
-#@dataclass
-#class FN125LampreyPartial:
-#    xlam: Optional[str] = None
-#    lamijc_type: Optional[str] = None
-#    lamijc_size: Optional[int] = None
-#    comment_lam: Optional[str] = None
-
-
 from enum import Enum
 from typing import Optional
 
@@ -58,7 +31,7 @@ class FN125Lamprey(FNBase):
     eff: constr(pattern="^([A-Z0-9]{3})$")
     spc: constr(pattern="^([A-Z0-9]{3})$")
     grp: constr(pattern="^([A-Z0-9]{2})$")
-    fish: int
+    fish: constr(max_length=6, to_upper=True, pattern=r"^[0-9A-Z]{1,6}$")
     lamid: int
     xlam: Optional[constr(pattern=r"^0|\d{4}$")]
     lamijc_type: Optional[LamIjcEnum]
@@ -86,7 +59,6 @@ class FN125Lamprey(FNBase):
             msg = f"No wounding information found in record."
             raise ValueError(msg)
         if lamijc_type and xlam:
-
             msg = f"Two different wound reporting mechanisms used."
             raise ValueError(msg)
         return values

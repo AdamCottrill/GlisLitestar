@@ -3,7 +3,13 @@ from typing import Optional
 
 from pydantic import PositiveInt, PositiveFloat, confloat, field_validator, constr
 from .FNBase import FNBase
-from .utils import string_to_float, string_to_int, empty_to_none, PRJ_CD_REGEX, val_to_string
+from .utils import (
+    string_to_float,
+    string_to_int,
+    empty_to_none,
+    PRJ_CD_REGEX,
+    val_to_string,
+)
 
 
 class FdMesEnum(str, Enum):
@@ -20,7 +26,7 @@ class FN126(FNBase):
     eff: constr(pattern="^([A-Z0-9]{3})$")
     spc: constr(pattern="^([A-Z0-9]{3})$")
     grp: constr(pattern="^([A-Z0-9]{2})$")
-    fish: str
+    fish: constr(max_length=6, to_upper=True, pattern=r"^[0-9A-Z]{1,6}$")
     food: int
     taxon: str
     fdcnt: Optional[confloat(ge=0)] = None
@@ -28,7 +34,6 @@ class FN126(FNBase):
     fdval: Optional[PositiveFloat]
     lifestage: Optional[PositiveInt]
     comment6: Optional[str]
-
 
     _val_to_str = field_validator("fish", mode="before")(val_to_string)
     _string_to_float = field_validator("fdval", mode="before")(string_to_float)

@@ -68,7 +68,7 @@ class FN126Controller(Controller):
         key_fields = [prj_cd, sam, eff, spc, grp, fish, food]
         values = get_data_values(data)
 
-        sql = FN126Table.update_one(data.__dict__)
+        sql = FN126Table.update_one(data.model_dump())
 
         params = values + key_fields
         await run_sql(sql, params)

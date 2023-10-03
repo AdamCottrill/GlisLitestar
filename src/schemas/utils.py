@@ -1,4 +1,5 @@
-from typing import Optional
+from typing import Optional, List
+from pydantic import field_validator
 
 PRJ_CD_REGEX = r"[A-Z0-9]{3}_[A-Z]{2}\d{2}_[A-Z0-9]{3}"
 
@@ -45,8 +46,59 @@ def val_to_string(v) -> Optional[str]:
     return val
 
 
-
 def empty_to_none(v: str) -> Optional[str]:
     if v == "":
         return None
     return v
+
+
+def check_ascii_sort(value: str) -> Optional[str]:
+    if value is not None:
+        val = list(set(value))
+        val.sort()
+        val = "".join(val)
+        if val != value:
+            msg = f"Found non-unique or non-ascii sorted value '{value}' (it should be: {val})"
+            raise ValueError(msg)
+    return value
+
+
+def check_agest_values(value: str, allowed: str) -> Optional[str]:
+    if value is not None:
+        if "0" in value and len(value) > 1:
+            msg = f"Invalid AGEST. '0' cannot be used in combination with other structures."
+            raise ValueError(msg)
+
+        unknown = [c for c in value if c not in allowed]
+        if unknown:
+            msg = f"Unknown aging structures ({','.join(unknown)}) found in AGEST ({value})"
+            raise ValueError(msg)
+        return value
+
+
+def check_agest(field_name: str, allowed: List[str]):
+    return field_validator(field_name)(
+        lambda v: check_agest_values(v, "".join(allowed))
+    )
+
+
+def check_tissue_values(value: str, allowed: str) -> Optional[str]:
+    if value is not None:
+        unknown = [c for c in value if c not in allowed]
+        if unknown:
+            msg = f"Unknown tissue type ({','.join(unknown)}) found in TISSUE ({value})"
+            raise ValueError(msg)
+        return value
+
+
+def check_tissue(field_name: str, allowed: List[str]):
+    return field_validator(field_name)(
+        lambda v: check_tissue_values(v, "".join(allowed))
+    )
+
+
+def to_uppercase(value: str) -> str:
+    if hasattr(value, "upper"):
+        return value.upper()
+    else:
+        return value

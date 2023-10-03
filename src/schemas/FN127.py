@@ -1,44 +1,3 @@
-# from dataclasses import dataclass
-# from typing import Optional
-
-
-# @dataclass
-# class FN127:
-#     prj_cd: str
-#     sam: str
-#     eff: str
-#     spc: str
-#     grp: str
-#     fish: str
-#     ageid: int
-#     preferred: bool
-#     agea: Optional[int] = None
-#     agemt: Optional[str] = None
-#     edge: Optional[str] = None
-#     conf: Optional[int] = None
-#     nca: Optional[int] = None
-#     agestrm: Optional[int] = None
-#     agelake: Optional[int] = None
-#     spawnchkcnt: Optional[int] = None
-#     age_fail: Optional[str] = None
-#     comment7: Optional[str] = None
-
-
-# @dataclass
-# class FN127Partial:
-#     preferred: Optional[bool] = None
-#     agea: Optional[int] = None
-#     agemt: Optional[str] = None
-#     edge: Optional[str] = None
-#     conf: Optional[int] = None
-#     nca: Optional[int] = None
-#     agestrm: Optional[int] = None
-#     agelake: Optional[int] = None
-#     spawnchkcnt: Optional[int] = None
-#     age_fail: Optional[str] = None
-#     comment7: Optional[str] = None
-
-
 from enum import Enum
 from typing import Optional
 
@@ -47,30 +6,7 @@ from .FNBase import FNBase
 from .utils import PRJ_CD_REGEX, string_to_int, empty_to_none
 
 
-AGEST_CHOICES = [
-    "0",
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "M",
-    "T",
-    "V",
-    "X",
-]
-AGEPREP1_CHOICES = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "C", "K", "T"]
-AGEPREP2_CHOICES = ["1", "2", "3", "4", "9"]
+from .choices import AGEST_CHOICES, AGEPREP1_CHOICES, AGEPREP2_CHOICES
 
 
 class EdgeEnum(str, Enum):
@@ -105,7 +41,7 @@ class FN127(FNBase):
     eff: constr(pattern="^([A-Z0-9]{3})$")
     spc: constr(pattern="^([A-Z0-9]{3})$")
     grp: constr(pattern="^([A-Z0-9]{2})$")
-    fish: str
+    fish: constr(max_length=6, to_upper=True, pattern=r"^[0-9A-Z]{1,6}$")
     ageid: int
     preferred: bool
     agea: Optional[conint(ge=0)] = None
