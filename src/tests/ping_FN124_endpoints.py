@@ -1,5 +1,6 @@
 import requests
 from pprint import pprint
+import sys
 
 domain = "http://127.0.0.1:8000"
 
@@ -8,7 +9,7 @@ sam = "4009"
 eff = "114"
 spc = "081"
 grp = "00"
-siz = "150"
+siz = int(sys.argv[1])
 
 
 root_url = "http://127.0.0.1:8000/api/fn124/"
@@ -60,13 +61,13 @@ pprint(response.json())
 assert response.status_code == 200
 
 
-print("updating an existing  fn124 object with agea=12...")
-response = requests.patch(
-    url, json={"sizcnt": 12, "comment4": "Updated via a PATCH request"}
-)
-print(response)
-pprint(response.json())
-assert response.status_code == 200
+# print("updating an existing  fn124 object with agea=12...")
+# response = requests.patch(
+#     url, json={"sizcnt": 12, "comment4": "Updated via a PATCH request"}
+# )
+# print(response)
+# pprint(response.json())
+# assert response.status_code == 200
 
 print("Deleting our new  fn124 object...")
 response = requests.delete(url)

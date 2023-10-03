@@ -1,20 +1,23 @@
+from pydantic import field_validator, constr, conint, PositiveInt
 from typing import Optional
-from dataclasses import dataclass
+
+from .FNBase import FNBase
+from .utils import string_to_int, PRJ_CD_REGEX
 
 
-@dataclass
-class FN124:
-    prj_cd: str
+class FN124(FNBase):
+    """Pydanic model for length tallies."""
+
+    prj_cd: constr(pattern=PRJ_CD_REGEX)
     sam: str
-    eff: str
-    spc: str
-    grp: str
-    siz: str
-    sizcnt: int
+    eff: constr(pattern="^([A-Z0-9]{3})$")
+    spc: constr(pattern="^([A-Z0-9]{3})$")
+    grp: constr(pattern="^([A-Z0-9]{2})$")
+    siz: conint(ge=10)
+    sizcnt: PositiveInt
     comment4: Optional[str] = None
 
+    class Config:
+        validate_assignment = True
 
-@dataclass
-class FN124Partial:
-    sizcnt: Optional[int] = None
-    comment4: Optional[str] = None
+    _string_to_int = field_validator("siz", "sizcnt", mode="before")(string_to_int)

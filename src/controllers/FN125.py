@@ -1,4 +1,4 @@
-from litestar import Controller, get, post, patch, put, delete
+from litestar import Controller, get, post, put, delete
 from typing import Optional, Union
 from schemas import FN125
 from .FishnetTables import FN125 as FN125Table
@@ -36,7 +36,6 @@ class FN125Controller(Controller):
     async def fn125_detail(
         self, prj_cd: str, sam: str, eff: str, spc: str, grp: str, fish: str
     ) -> Union[FN125, None]:
-
         sql = FN125Table.select_one()
         data = await get_rows(sql, [prj_cd, sam, eff, spc, grp, fish])
 
@@ -47,7 +46,6 @@ class FN125Controller(Controller):
         self,
         data: FN125,
     ) -> Union[FN125, None]:
-
         sql = FN125Table.create()
         values = get_data_values(data)
 

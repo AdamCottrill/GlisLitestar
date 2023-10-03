@@ -1,13 +1,12 @@
-from litestar import Controller, get, post, put, patch, delete
+from litestar import Controller, get, post, put, delete
 from typing import Optional, Union
-from schemas import FN124, FN124Partial
+from schemas import FN124
+from .FishnetTables import FN124 as FN124Table
 from utils import (
     get_data,
     get_rows,
-    read_sql_file,
     get_data_values,
     run_sql,
-    update_clause,
 )
 
 
@@ -28,7 +27,7 @@ class FN124Controller(Controller):
         names = ["prj_cd", "sam", "eff", "spc", "grp", "siz"]
         values = [prj_cd, sam, eff, spc, grp, siz]
 
-        sql = read_sql_file("controllers/sql/FN124/get_item_list.sql")
+        sql = FN124Table.select(order_by_keys=False)
 
         data = await get_data(sql, names, values)
 
@@ -38,7 +37,7 @@ class FN124Controller(Controller):
     async def fn124_detail(
         self, prj_cd: str, sam: str, eff: str, spc: str, grp: str, siz: str
     ) -> Union[FN124, None]:
-        sql = read_sql_file("controllers/sql/FN124/get_item.sql")
+        sql = FN124Table.select_one()
 
         data = await get_rows(sql, [prj_cd, sam, eff, spc, grp, siz])
 
@@ -49,7 +48,7 @@ class FN124Controller(Controller):
         self,
         data: FN124,
     ) -> Union[FN124, None]:
-        sql = read_sql_file("controllers/sql/FN124/create_item.sql")
+        sql = FN124Table.create()
         values = get_data_values(data)
 
         await run_sql(sql, values)
@@ -69,57 +68,46 @@ class FN124Controller(Controller):
     ) -> Union[FN124, None]:
         key_fields = [prj_cd, sam, eff, spc, grp, siz]
         values = get_data_values(data)
-        updates = update_clause(data)
 
-        sql = f"""
-        Update [FN124] set
-        {updates}
-        where
-        [prj_cd]=? and
-        [sam]=? and
-        [eff]=? and
-        [spc]=? and
-        [grp]=? and
-        [siz]=?
-        """
+        sql = FN124Table.update_one(data.model_dump())
         params = values + key_fields
         await run_sql(sql, params)
 
         return data
 
-    @patch("/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}/{siz:str}")
-    async def fn124_patch(
-        self,
-        data: FN124Partial,
-        prj_cd: str,
-        sam: str,
-        eff: str,
-        spc: str,
-        grp: str,
-        siz: str,
-    ) -> Union[FN124, None]:
-        key_fields = [prj_cd, sam, eff, spc, grp, siz]
-        values = get_data_values(data)
-        updates = update_clause(data)
+    # @patch("/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}/{siz:str}")
+    # async def fn124_patch(
+    #     self,
+    #     data: FN124Partial,
+    #     prj_cd: str,
+    #     sam: str,
+    #     eff: str,
+    #     spc: str,
+    #     grp: str,
+    #     siz: str,
+    # ) -> Union[FN124, None]:
+    #     key_fields = [prj_cd, sam, eff, spc, grp, siz]
+    #     values = get_data_values(data)
+    #     updates = update_clause(data)
 
-        sql = f"""
-        Update [FN124] set
-        {updates}
-        where
-        [prj_cd]=? and
-        [sam]=? and
-        [eff]=? and
-        [spc]=? and
-        [grp]=? and
-        [siz]=?
-        """
-        params = values + key_fields
-        await run_sql(sql, params)
+    #     sql = f"""
+    #     Update [FN124] set
+    #     {updates}
+    #     where
+    #     [prj_cd]=? and
+    #     [sam]=? and
+    #     [eff]=? and
+    #     [spc]=? and
+    #     [grp]=? and
+    #     [siz]=?
+    #     """
+    #     params = values + key_fields
+    #     await run_sql(sql, params)
 
-        sql = read_sql_file("controllers/sql/FN124/get_item.sql")
-        data = await get_rows(sql, key_fields)
+    #     sql = read_sql_file("controllers/sql/FN124/get_item.sql")
+    #     data = await get_rows(sql, key_fields)
 
-        return data
+    #    return data
 
     @delete("/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}/{siz:str}")
     async def fn124_delete(
@@ -131,7 +119,7 @@ class FN124Controller(Controller):
         grp: str,
         siz: str,
     ) -> None:
-        sql = read_sql_file("controllers/sql/FN124/delete_item.sql")
+        sql = FN124Table.delete_one()
         await run_sql(sql, [prj_cd, sam, eff, spc, grp, siz])
 
         return None

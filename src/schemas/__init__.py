@@ -10,7 +10,7 @@ from .FN121GpsTrack import FN121GpsTrack
 from .FN122 import FN122, FN122Partial
 from .FN123 import FN123, FN123Partial
 from .FN123NonFish import FN123NonFish, FN123NonFishPartial
-from .FN124 import FN124, FN124Partial
+from .FN124 import FN124
 from .FN125 import FN125
 from .FN125Lamprey import FN125Lamprey
 from .FN125Tag import FN125Tag
