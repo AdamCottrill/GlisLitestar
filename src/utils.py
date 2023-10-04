@@ -1,6 +1,9 @@
 import os
 from pathlib import Path
 
+from contextlib import asynccontextmanager
+from collections.abc import AsyncGenerator
+
 
 from typing import Union
 
@@ -19,30 +22,42 @@ def read_sql_file(sql_path: Path) -> str:
     return Path(sql_path).read_text()
 
 
-async def get_rows(sql: str, args: list = None):
+async def db_connection():
     constring = "DRIVER={{Microsoft Access Driver (*.mdb, *.accdb)}};DBQ={}"
-    results = []
-    async with aioodbc.connect(dsn=constring.format(SRC_DB)) as conn:
-        async with conn.cursor() as cur:
-            if args:
-                await cur.execute(sql, args)
-            else:
-                await cur.execute(sql)
-            colnames = [x[0].lower() for x in cur.description]
-            rows = await cur.fetchall()
+    conn = await aioodbc.connect(dsn=constring.format(SRC_DB))
+    return conn
 
-            for row in rows:
-                results.append(dict(zip(colnames, row)))
+
+async def get_rows(sql: str, args: list = None):
+    results = []
+    # async with aioodbc.connect(dsn=constring.format(SRC_DB)) as conn:
+    conn = await db_connection()
+
+    async with conn.cursor() as cur:
+        if args:
+            await cur.execute(sql, args)
+        else:
+            await cur.execute(sql)
+        colnames = [x[0].lower() for x in cur.description]
+        rows = await cur.fetchall()
+
+        for row in rows:
+            results.append(dict(zip(colnames, row)))
+
+    await conn.close()
+
     return results
 
 
 async def run_sql(sql: str, values: list):
     """used for queries that don't return records - delete, post, put"""
 
-    constring = "DRIVER={{Microsoft Access Driver (*.mdb, *.accdb)}};DBQ={}"
-    async with aioodbc.connect(dsn=constring.format(SRC_DB)) as conn:
-        async with conn.cursor() as cur:
-            await cur.execute(sql, values)
+    # constring = "DRIVER={{Microsoft Access Driver (*.mdb, *.accdb)}};DBQ={}"
+    # async with aioodbc.conect(dsn=constring.format(SRC_DB)) as conn:
+    conn = await db_connection()
+    async with conn.cursor() as cur:
+        await cur.execute(sql, values)
+    await conn.close()
 
 
 async def get_data(sql: str, names, values):
