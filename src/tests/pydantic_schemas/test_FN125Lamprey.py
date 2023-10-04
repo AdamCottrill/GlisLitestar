@@ -151,7 +151,7 @@ def test_valid_alternatives(data, fld, value_in, value_out):
     if fld == "xlam":
         data["lamijc_type"] = None
     item = FN125Lamprey(**data)
-    item_dict = item.dict()
+    item_dict = item.model_dump()
     assert item_dict[fld] == value_out
 
 
