@@ -60,7 +60,7 @@ class FN125(FNBase):
 
     prj_cd: constr(pattern=PRJ_CD_REGEX)
     sam: str
-    eff: constr(pattern="^([A-Z0-9]{3})$")
+    eff: constr(pattern="^([A-Z0-9]{1,3})$")
     spc: constr(pattern="^([A-Z0-9]{3})$")
     grp: constr(pattern="^([A-Z0-9]{2})$")
 

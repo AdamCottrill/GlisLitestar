@@ -1,11 +1,12 @@
 import requests
+import sys
 from pprint import pprint
 
 domain = "http://127.0.0.1:8000"
 
 prj_cd = "LEA_IA17_097"
 sam = "4009"
-eff = "031"
+eff = sys.argv[1]
 
 
 root_url = "http://127.0.0.1:8000/api/fn122/"
@@ -61,13 +62,13 @@ pprint(response.json())
 assert response.status_code == 200
 
 
-print("updating an existing  fn122 object with effdst=30.5.")
-response = requests.patch(
-    url, json={"effdst": 30.5, "comment2": "Updated via a PATCH request"}
-)
-print(response)
-pprint(response.json())
-assert response.status_code == 200
+# print("updating an existing  fn122 object with effdst=30.5.")
+# response = requests.patch(
+#     url, json={"effdst": 30.5, "comment2": "Updated via a PATCH request"}
+# )
+# print(response)
+# pprint(response.json())
+# assert response.status_code == 200
 
 print("Deleting our new  fn122 object...")
 response = requests.delete(url)

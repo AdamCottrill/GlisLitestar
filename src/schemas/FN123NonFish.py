@@ -17,7 +17,7 @@ class FN123NonFish(FNBase):
 
     prj_cd: constr(pattern=PRJ_CD_REGEX)
     sam: str
-    eff: constr(pattern="^([A-Z0-9]{3})$")
+    eff: constr(pattern="^([A-Z0-9]{1,3})$")
     taxon: constr(pattern="^([A-Z0-9]{4,20})$")
 
     catcnt: Optional[conint(ge=1)] = None
