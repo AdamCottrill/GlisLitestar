@@ -1,14 +1,12 @@
-from litestar import Controller, get, post, put, patch, delete
+from litestar import Controller, get, post, put, delete
 from typing import Optional, Union
-
-from schemas import FN123, FN123Partial
+from .FishnetTables import FN123 as FN123Table
+from schemas import FN123
 from utils import (
     get_rows,
     get_data,
-    read_sql_file,
     get_data_values,
     run_sql,
-    update_clause,
 )
 
 
@@ -29,8 +27,8 @@ class FN123Controller(Controller):
         # filters and values
         names = ["prj_cd", "sam", "eff", "spc", "grp"]
         values = [prj_cd, sam, eff, spc, grp]
+        sql = FN123Table.select(order_by_keys=False)
 
-        sql = read_sql_file("controllers/sql/FN123/get_item_list.sql")
         data = await get_data(sql, names, values)
 
         return data
@@ -44,8 +42,7 @@ class FN123Controller(Controller):
         spc: str,
         grp: str,
     ) -> FN123:
-        sql = read_sql_file("controllers/sql/FN123/get_item.sql")
-
+        sql = FN123Table.select_one()
         data = await get_rows(sql, [prj_cd, sam, eff, spc, grp])
 
         return data
@@ -55,8 +52,8 @@ class FN123Controller(Controller):
         self,
         data: FN123,
     ) -> Union[FN123, None]:
-        sql = read_sql_file("controllers/sql/FN123/create_item.sql")
         values = get_data_values(data)
+        sql = FN123Table.create()
 
         await run_sql(sql, values)
 
@@ -74,54 +71,45 @@ class FN123Controller(Controller):
     ) -> Union[FN123, None]:
         key_fields = [prj_cd, sam, eff, spc, grp]
         values = get_data_values(data)
-        updates = update_clause(data)
 
-        sql = f"""
-        Update [FN123] set
-        {updates}
-        where
-        [prj_cd]=? and
-        [sam]=? and
-        [eff]=? and
-        [spc]=? and
-        [grp]=?
-        """
+        sql = FN123Table.update_one(data.model_dump())
+
         params = values + key_fields
         await run_sql(sql, params)
 
         return data
 
-    @patch("/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}")
-    async def fn123_patch(
-        self,
-        data: FN123Partial,
-        prj_cd: str,
-        sam: str,
-        eff: str,
-        spc: str,
-        grp: str,
-    ) -> Union[FN123, None]:
-        key_fields = [prj_cd, sam, eff, spc, grp]
-        values = get_data_values(data)
-        updates = update_clause(data)
+    # @patch("/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}")
+    # async def fn123_patch(
+    #     self,
+    #     data: FN123Partial,
+    #     prj_cd: str,
+    #     sam: str,
+    #     eff: str,
+    #     spc: str,
+    #     grp: str,
+    # ) -> Union[FN123, None]:
+    #     key_fields = [prj_cd, sam, eff, spc, grp]
+    #     values = get_data_values(data)
+    #     updates = update_clause(data)
 
-        sql = f"""
-        Update [FN123] set
-        {updates}
-        where
-        [prj_cd]=? and
-        [sam]=? and
-        [eff]=? and
-        [spc]=? and
-        [grp]=?
-        """
-        params = values + key_fields
-        await run_sql(sql, params)
+    #     sql = f"""
+    #     Update [FN123] set
+    #     {updates}
+    #     where
+    #     [prj_cd]=? and
+    #     [sam]=? and
+    #     [eff]=? and
+    #     [spc]=? and
+    #     [grp]=?
+    #     """
+    #     params = values + key_fields
+    #     await run_sql(sql, params)
 
-        sql = read_sql_file("controllers/sql/FN123/get_item.sql")
-        data = await get_rows(sql, key_fields)
+    #     sql = read_sql_file("controllers/sql/FN123/get_item.sql")
+    #     data = await get_rows(sql, key_fields)
 
-        return data
+    #     return data
 
     @delete("/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}")
     async def fn123_delete(
@@ -132,7 +120,8 @@ class FN123Controller(Controller):
         spc: str,
         grp: str,
     ) -> None:
-        sql = read_sql_file("controllers/sql/FN123/delete_item.sql")
+        sql = FN123Table.delete_one()
+
         await run_sql(sql, [prj_cd, sam, eff, spc, grp])
 
         return None

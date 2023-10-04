@@ -1,4 +1,4 @@
-from pydantic import field_validator, constr, conint, PositiveInt
+from pydantic import field_validator, constr, conint, PositiveInt, ConfigDict
 from typing import Optional
 
 from .FNBase import FNBase
@@ -17,7 +17,6 @@ class FN124(FNBase):
     sizcnt: PositiveInt
     comment4: Optional[str] = None
 
-    class Config:
-        validate_assignment = True
+    model_config = ConfigDict(validate_assignment=True)
 
     _string_to_int = field_validator("siz", "sizcnt", mode="before")(string_to_int)
