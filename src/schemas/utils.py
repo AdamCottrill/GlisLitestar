@@ -1,7 +1,18 @@
 from typing import Optional, List
 from pydantic import field_validator
+from datetime import datetime
+from enum import Enum
+
 
 PRJ_CD_REGEX = r"[A-Z0-9]{3}_[A-Z]{2}\d{2}_[A-Z0-9]{3}"
+
+
+class ProcessTypeEnum(str, Enum):
+    by_sample = "1"
+    by_mesh_size = "2"
+    by_panel_group = "3"
+    by_panel = "4"
+    other = "5"
 
 
 def string_to_float(v) -> Optional[float]:
@@ -50,6 +61,31 @@ def empty_to_none(v: str) -> Optional[str]:
     if v == "":
         return None
     return v
+
+
+def yr_to_year(yr):
+    if int(yr) < 50:
+        return f"20{yr}"
+    else:
+        return f"19{yr}"
+
+
+def strip_0(val):
+    """Lat lon can be null, but they cannot be 0."""
+    if val == 0 or val == "0" or val == "":
+        return None
+    return val
+
+
+def strip_date(value):
+    """pyodbc treats times as datetimes. we need to strip the date off if
+    it is there."""
+
+    if value == "":
+        return None
+    if isinstance(value, datetime):
+        return value.time()
+    return value
 
 
 def check_ascii_sort(value: str) -> Optional[str]:
@@ -102,3 +138,10 @@ def to_uppercase(value: str) -> str:
         return value.upper()
     else:
         return value
+
+
+def not_specified(value: str) -> str:
+    if value:
+        return value.title()
+    else:
+        return "Not Specified"

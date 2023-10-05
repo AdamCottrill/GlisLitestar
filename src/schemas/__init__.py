@@ -4,7 +4,7 @@ from .FN022 import FN022
 from .FN026 import FN026
 from .FN026Subspace import FN026Subspace
 from .FN028 import FN028
-from .FN121 import FN121, FN121Partial
+from .FN121 import FN121
 from .FN121Electrofishing import FN121Electrofishing
 from .FN121GpsTrack import FN121GpsTrack
 from .FN122 import FN122

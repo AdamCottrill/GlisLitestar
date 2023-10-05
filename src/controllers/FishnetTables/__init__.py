@@ -1,3 +1,5 @@
+from .FN022 import FN022
+from .FN121 import FN121
 from .FN122 import FN122
 from .FN123NonFish import FN123NonFish
 from .FN123 import FN123
