@@ -43,6 +43,17 @@ def string_to_int(v) -> Optional[int]:
     return val
 
 
+def int_to_string(v) -> Optional[str]:
+    if v is None:
+        return v
+    else:
+        try:
+            val = str(v)
+        except ValueError:
+            val = None
+    return val
+
+
 def val_to_string(v) -> Optional[str]:
     """A validator that will convert integers passed in as strings to a
     python string."""

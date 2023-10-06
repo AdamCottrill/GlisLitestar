@@ -1,8 +1,9 @@
-from litestar import Controller, get
+from litestar import Controller, get, post, put, delete
 
+from .FishnetTables import FN028 as FN028Table
 from schemas import FN028
-from typing import Optional
-from utils import get_rows, get_data
+from typing import Optional, Union
+from utils import get_rows, get_data, get_data_values, run_sql
 
 
 class FN028Controller(Controller):
@@ -16,41 +17,60 @@ class FN028Controller(Controller):
     ) -> list[FN028]:
         names = ["prj_cd", "mode"]
         values = [prj_cd, mode]
-
-        sql = """SELECT [PRJ_CD],
-             [MODE],
-             [MODE_DES],
-             [GR],
-             [GRUSE],
-             [ORIENT],
-             [EFFDUR_GE],
-             [EFFDUR_LT],
-             [EFFTM0_GE],
-             [EFFTM0_LT]
-            FROM [FN028]
-
-        """
-
+        sql = FN028Table.select(order_by_keys=False)
         data = await get_data(sql, names, values)
 
         return data
 
     @get("/{prj_cd:str}/{mode:str}")
     async def fn028_detail(self, prj_cd: str, mode: str) -> list[FN028]:
-        sql = """SELECT [PRJ_CD],
-             [MODE],
-             [MODE_DES],
-             [GR],
-             [GRUSE],
-             [ORIENT],
-             [EFFDUR_GE],
-             [EFFDUR_LT],
-             [EFFTM0_GE],
-             [EFFTM0_LT]
-            FROM [FN028]  where [prj_cd]=? and [mode]=?
-
-        """
-
+        sql = FN028Table.select_one()
         data = await get_rows(sql, [prj_cd, mode])
 
         return data
+
+    @post("/")
+    async def fn028_create(
+        self,
+        data: FN028,
+    ) -> Union[FN028, None]:
+        sql = FN028Table.create()
+
+        values = get_data_values(data)
+
+        await run_sql(sql, values)
+
+        return data
+
+    @put("/{prj_cd:str}/{mode:str}")
+    async def fn028_put(
+        self,
+        data: FN028,
+        prj_cd: str,
+        mode: str,
+    ) -> Union[FN028, None]:
+        key_fields = [prj_cd, mode]
+        values = get_data_values(data)
+        sql = FN028Table.update_one(data.model_dump())
+        params = values + key_fields
+
+        from rich import print as rprint
+
+        rprint(data)
+        rprint(params)
+        print(sql)
+
+        await run_sql(sql, params)
+
+        return data
+
+    @delete("/{prj_cd:str}/{mode:str}")
+    async def fn028_delete(
+        self,
+        prj_cd: str,
+        mode: str,
+    ) -> None:
+        sql = FN028Table.delete_one()
+        await run_sql(sql, [prj_cd, mode])
+
+        return None
