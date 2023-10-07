@@ -5,7 +5,6 @@ from schemas import FN123
 from utils import (
     get_rows,
     get_data,
-    get_data_values,
     run_sql,
 )
 
@@ -52,7 +51,9 @@ class FN123Controller(Controller):
         self,
         data: FN123,
     ) -> Union[FN123, None]:
-        values = get_data_values(data)
+        data_dict = data.model_dump()
+        values = FN123Table.values(data_dict)
+
         sql = FN123Table.create()
 
         await run_sql(sql, values)
@@ -70,9 +71,10 @@ class FN123Controller(Controller):
         grp: str,
     ) -> Union[FN123, None]:
         key_fields = [prj_cd, sam, eff, spc, grp]
-        values = get_data_values(data)
 
-        sql = FN123Table.update_one(data.model_dump())
+        data_dict = data.model_dump()
+        values = FN123Table.values(data_dict)
+        sql = FN123Table.update_one(data_dict)
 
         params = values + key_fields
         await run_sql(sql, params)

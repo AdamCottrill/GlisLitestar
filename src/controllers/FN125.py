@@ -6,7 +6,6 @@ from utils import (
     get_data,
     get_rows,
     run_sql,
-    get_data_values,
 )
 
 
@@ -47,7 +46,9 @@ class FN125Controller(Controller):
         data: FN125,
     ) -> Union[FN125, None]:
         sql = FN125Table.create()
-        values = get_data_values(data)
+
+        data_dict = data.model_dump()
+        values = FN125Table.values(data_dict)
 
         await run_sql(sql, values)
 
@@ -65,9 +66,10 @@ class FN125Controller(Controller):
         fish: str,
     ) -> Union[FN125, None]:
         key_fields = [prj_cd, sam, eff, spc, grp, fish]
-        values = get_data_values(data)
 
-        sql = FN125Table.update_one(data.model_dump())
+        data_dict = data.model_dump()
+        values = FN125Table.values(data_dict)
+        sql = FN125Table.update_one(data_dict)
 
         params = values + key_fields
         await run_sql(sql, params)

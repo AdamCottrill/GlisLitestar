@@ -6,7 +6,6 @@ from schemas import FN123NonFish
 from utils import (
     get_rows,
     get_data,
-    get_data_values,
     run_sql,
 )
 
@@ -50,7 +49,9 @@ class FN123NonFishController(Controller):
         data: FN123NonFish,
     ) -> Union[FN123NonFish, None]:
         sql = FN123NonFishTable.create()
-        values = get_data_values(data)
+
+        data_dict = data.model_dump()
+        values = FN123NonFishTable.values(data_dict)
 
         await run_sql(sql, values)
 
@@ -66,9 +67,11 @@ class FN123NonFishController(Controller):
         taxon: str,
     ) -> Union[FN123NonFish, None]:
         key_fields = [prj_cd, sam, eff, taxon]
-        values = get_data_values(data)
 
-        sql = FN123NonFishTable.update_one(data.model_dump())
+        data_dict = data.model_dump()
+        values = FN123NonFishTable.values(data_dict)
+
+        sql = FN123NonFishTable.update_one(data_dict)
 
         params = values + key_fields
         await run_sql(sql, params)

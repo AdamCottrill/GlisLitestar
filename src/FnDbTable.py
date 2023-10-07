@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Union
+from typing import Union, Any, List
 
 
 @dataclass
@@ -40,6 +40,17 @@ class FishNetDbTable:
         """Return a comma separated list question mark place holders -
         one question mark for each element in values list."""
         return ",".join(["?"] * len(values))
+
+    def values(self, values: dict) -> List[Any]:
+        """the pyodbc driver does not support named query
+        parameters. This method ensure that the values list used in
+        our queries match the field order associated the class.
+
+        """
+        values_list = []
+        for fld in self.fields:
+            values_list.append(values[fld.lower()])
+        return values_list
 
     def update_one(self, values: dict) -> str:
         # TODO - verify that the fields are in the model

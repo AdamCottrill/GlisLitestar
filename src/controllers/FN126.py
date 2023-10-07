@@ -5,7 +5,6 @@ from schemas import FN126
 from .FishnetTables import FN126 as FN126Table
 from utils import (
     get_data,
-    get_data_values,
     get_rows,
     run_sql,
 )
@@ -49,7 +48,9 @@ class FN126Controller(Controller):
         data: FN126,
     ) -> Union[FN126, None]:
         sql = FN126Table.create()
-        values = get_data_values(data)
+        data_dict = data.model_dump()
+        values = FN126Table.values(data_dict)
+
         await run_sql(sql, values)
         return data
 
@@ -66,9 +67,11 @@ class FN126Controller(Controller):
         food: int,
     ) -> Union[FN126, None]:
         key_fields = [prj_cd, sam, eff, spc, grp, fish, food]
-        values = get_data_values(data)
 
-        sql = FN126Table.update_one(data.model_dump())
+        data_dict = data.model_dump()
+        values = FN126Table.values(data_dict)
+
+        sql = FN126Table.update_one(data_dict)
 
         params = values + key_fields
         await run_sql(sql, params)

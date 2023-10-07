@@ -5,7 +5,6 @@ from schemas import FN125Tag
 from .FishnetTables import FN125Tag as FN125TagTable
 from utils import (
     get_data,
-    get_data_values,
     get_rows,
     run_sql,
 )
@@ -59,7 +58,9 @@ class FN125TagController(Controller):
         data: FN125Tag,
     ) -> Union[FN125Tag, None]:
         sql = FN125TagTable.create()
-        values = get_data_values(data)
+
+        data_dict = data.model_dump()
+        values = FN125TagTable.values(data_dict)
         await run_sql(sql, values)
 
         return data
@@ -79,9 +80,11 @@ class FN125TagController(Controller):
         fish_tag_id: int,
     ) -> Union[FN125Tag, None]:
         key_fields = [prj_cd, sam, eff, spc, grp, fish, fish_tag_id]
-        values = get_data_values(data)
 
-        sql = FN125TagTable.update_one(data.__dict__)
+        data_dict = data.model_dump()
+        values = FN125TagTable.values(data_dict)
+
+        sql = FN125TagTable.update_one(data_dict)
 
         params = values + key_fields
         await run_sql(sql, params)

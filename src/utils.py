@@ -28,6 +28,17 @@ async def db_connection():
     return conn
 
 
+async def run_sql(sql: str, values: list):
+    """used for queries that don't return records - delete, post, put"""
+
+    # constring = "DRIVER={{Microsoft Access Driver (*.mdb, *.accdb)}};DBQ={}"
+    # async with aioodbc.conect(dsn=constring.format(SRC_DB)) as conn:
+    conn = await db_connection()
+    async with conn.cursor() as cur:
+        await cur.execute(sql, values)
+    await conn.close()
+
+
 async def get_rows(sql: str, args: list = None):
     results = []
     # async with aioodbc.connect(dsn=constring.format(SRC_DB)) as conn:
@@ -47,17 +58,6 @@ async def get_rows(sql: str, args: list = None):
     await conn.close()
 
     return results
-
-
-async def run_sql(sql: str, values: list):
-    """used for queries that don't return records - delete, post, put"""
-
-    # constring = "DRIVER={{Microsoft Access Driver (*.mdb, *.accdb)}};DBQ={}"
-    # async with aioodbc.conect(dsn=constring.format(SRC_DB)) as conn:
-    conn = await db_connection()
-    async with conn.cursor() as cur:
-        await cur.execute(sql, values)
-    await conn.close()
 
 
 async def get_data(sql: str, names, values):
@@ -82,22 +82,13 @@ def args_to_where(names: list[str], values: list[Union[str, int, None]]) -> str:
     assocaited values and return the where clause that can be added to
     out sql statement
 
+    NOT NEEDED AFTER FishNetDataTable is fully adopted
+
     """
 
     args = [f"[{nm}]=?" for nm, val in zip(names, values) if val is not None]
     joined = " AND ".join(args)
     return f" WHERE {joined}"
-
-
-def get_data_values(data):
-    """Given a data class instance, return the its values as a list"""
-
-    if hasattr(data, "dict"):
-        # pydantic
-        return [v for k, v in data.dict().items()]
-    else:
-        # msgspect
-        return [v for k, v in data.__dict__.items()]
 
 
 def update_clause(data):

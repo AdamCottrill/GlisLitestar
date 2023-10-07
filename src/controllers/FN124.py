@@ -5,7 +5,6 @@ from .FishnetTables import FN124 as FN124Table
 from utils import (
     get_data,
     get_rows,
-    get_data_values,
     run_sql,
 )
 
@@ -49,7 +48,9 @@ class FN124Controller(Controller):
         data: FN124,
     ) -> Union[FN124, None]:
         sql = FN124Table.create()
-        values = get_data_values(data)
+
+        data_dict = data.model_dump()
+        values = FN124Table.values(data_dict)
 
         await run_sql(sql, values)
 
@@ -67,9 +68,10 @@ class FN124Controller(Controller):
         siz: str,
     ) -> Union[FN124, None]:
         key_fields = [prj_cd, sam, eff, spc, grp, siz]
-        values = get_data_values(data)
 
-        sql = FN124Table.update_one(data.model_dump())
+        data_dict = data.model_dump()
+        values = FN124Table.values(data_dict)
+        sql = FN124Table.update_one(data_dict)
         params = values + key_fields
         await run_sql(sql, params)
 

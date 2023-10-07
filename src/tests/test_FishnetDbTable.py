@@ -227,3 +227,49 @@ def test_fntable_update(fishnet_table):
      [EFF]=?
     """
     assert strip_string(sql) == strip_string(should_be)
+
+
+def test_values(fishnet_table):
+    """the Fishnet table class has a values method that will accept a
+    dictionary and return a list of values that are sorted in the same
+    order as the fields in the FishnetTable class.
+    """
+
+    # jumbled dict to start
+    data_dict = {
+        "sam": "4009",
+        "effdst": 75,
+        "waterhaul": False,
+        "eff": "114",
+        "grdep1": 12.5,
+        "grdep0": 12,
+        "grtem0": 12.2,
+        "grtem1": 13.1,
+        "prj_cd": "LEA_IA17_097",
+        "comment2": "best effort yet",
+    }
+
+    # original order
+    init_order = [
+        data_dict["sam"],
+        data_dict["effdst"],
+        data_dict["waterhaul"],
+        data_dict["eff"],
+    ]
+
+    # the first 4 elements should be:
+    should_be = [
+        data_dict["prj_cd"],
+        data_dict["sam"],
+        data_dict["eff"],
+        data_dict["effdst"],
+    ]
+
+    # sanity check make sure that the default order of the data dict is
+    # based on creation order
+    init_values = list(data_dict.values())[:4]
+    assert init_values != should_be
+    assert init_values == init_order
+
+    observed = fishnet_table.values(data_dict)
+    assert observed[:4] == should_be

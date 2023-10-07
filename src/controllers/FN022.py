@@ -2,7 +2,7 @@ from litestar import Controller, get, post, put, delete
 from typing import Optional, Union
 from .FishnetTables import FN022 as FN022Table
 from schemas import FN022
-from utils import get_rows, get_data, get_data_values, run_sql
+from utils import get_rows, get_data, run_sql
 
 
 class FN022Controller(Controller):
@@ -36,7 +36,8 @@ class FN022Controller(Controller):
     ) -> Union[FN022, None]:
         sql = FN022Table.create()
 
-        values = get_data_values(data)
+        data_dict = data.model_dump()
+        values = FN022Table.values(data_dict)
 
         await run_sql(sql, values)
 
@@ -50,8 +51,10 @@ class FN022Controller(Controller):
         ssn: str,
     ) -> Union[FN022, None]:
         key_fields = [prj_cd, ssn]
-        values = get_data_values(data)
-        sql = FN022Table.update_one(data.model_dump())
+
+        data_dict = data.model_dump()
+        values = FN022Table.values(data_dict)
+        sql = FN022Table.update_one(data_dict)
 
         params = values + key_fields
         await run_sql(sql, params)

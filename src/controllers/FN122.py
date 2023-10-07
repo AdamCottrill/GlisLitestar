@@ -6,7 +6,6 @@ from schemas import FN122
 from utils import (
     get_rows,
     get_data,
-    get_data_values,
     run_sql,
 )
 
@@ -45,8 +44,8 @@ class FN122Controller(Controller):
         data: FN122,
     ) -> Union[FN122, None]:
         sql = FN122Table.create()
-
-        values = get_data_values(data)
+        data_dict = data.model_dump()
+        values = FN122Table.values(data_dict)
 
         await run_sql(sql, values)
 
@@ -61,8 +60,10 @@ class FN122Controller(Controller):
         eff: str,
     ) -> Union[FN122, None]:
         key_fields = [prj_cd, sam, eff]
-        values = get_data_values(data)
-        sql = FN122Table.update_one(data.model_dump())
+
+        data_dict = data.model_dump()
+        values = FN122Table.values(data_dict)
+        sql = FN122Table.update_one(data_dict)
 
         params = values + key_fields
         await run_sql(sql, params)

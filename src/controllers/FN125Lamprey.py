@@ -2,12 +2,7 @@ from litestar import Controller, get, post, put, patch, delete
 from typing import Optional, Union
 from schemas import FN125Lamprey
 from .FishnetTables import FN125Lamprey as FN125LampreyTable
-from utils import (
-    get_data,
-    get_rows,
-    get_data_values,
-    run_sql
-)
+from utils import get_data, get_rows, run_sql
 
 
 class FN125LampreyController(Controller):
@@ -49,7 +44,10 @@ class FN125LampreyController(Controller):
         data: FN125Lamprey,
     ) -> Union[FN125Lamprey, None]:
         sql = FN125LampreyTable.create()
-        values = get_data_values(data)
+
+        data_dict = data.model_dump()
+        values = FN125LampreyTable.values(data_dict)
+
         await run_sql(sql, values)
 
         return data
@@ -67,51 +65,53 @@ class FN125LampreyController(Controller):
         lamid: int,
     ) -> Union[FN125Lamprey, None]:
         key_fields = [prj_cd, sam, eff, spc, grp, fish, lamid]
-        values = get_data_values(data)
 
-        sql = FN125LampreyTable.update_one(data.__dict__)
+        data_dict = data.model_dump()
+        values = FN125LampreyTable.values(data_dict)
+
+        sql = FN125LampreyTable.update_one(data_dict)
         params = values + key_fields
         await run_sql(sql, params)
 
         return data
 
-#    @patch(
-#        "/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}/{fish:str}/{lamid:int}"
-#    )
-#    async def fn125Tag_patch(
-#        self,
-#        data: FN125LampreyPartial,
-#        prj_cd: str,
-#        sam: str,
-#        eff: str,
-#        spc: str,
-#        grp: str,
-#        fish: str,
-#        lamid: int,
-#    ) -> Union[FN125Lamprey, None]:
-#        key_fields = [prj_cd, sam, eff, spc, grp, fish, lamid]
-#        values = get_data_values(data)
-#        updates = update_clause(data)
-#
-#        sql = f"""
-#        Update [FN125_Lamprey] set
-#        {updates}
-#        where
-#        [prj_cd]=? and
-#        [sam]=? and
-#        [eff]=? and
-#        [spc]=? and
-#        [grp]=? and
-#        [fish]=? and
-#        [lamid]=?
-#        """
-#        params = values + key_fields
-#        await run_sql(sql, params)
-#
-#        sql = read_sql_file("controllers/sql/FN125Lamprey/get_item.sql")
-#        data = await get_rows(sql, key_fields)
-#
-#        return data
+    #    @patch(
+    #        "/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}/{fish:str}/{lamid:int}"
+    #    )
+    #    async def fn125Tag_patch(
+    #        self,
+    #        data: FN125LampreyPartial,
+    #        prj_cd: str,
+    #        sam: str,
+    #        eff: str,
+    #        spc: str,
+    #        grp: str,
+    #        fish: str,
+    #        lamid: int,
+    #    ) -> Union[FN125Lamprey, None]:
+    #        key_fields = [prj_cd, sam, eff, spc, grp, fish, lamid]
+    #        values = get_data_values(data)
+    #        updates = update_clause(data)
+    #
+    #        sql = f"""
+    #        Update [FN125_Lamprey] set
+    #        {updates}
+    #        where
+    #        [prj_cd]=? and
+    #        [sam]=? and
+    #        [eff]=? and
+    #        [spc]=? and
+    #        [grp]=? and
+    #        [fish]=? and
+    #        [lamid]=?
+    #        """
+    #        params = values + key_fields
+    #        await run_sql(sql, params)
+    #
+    #        sql = read_sql_file("controllers/sql/FN125Lamprey/get_item.sql")
+    #        data = await get_rows(sql, key_fields)
+    #
+    #        return data
 
     @delete(
         "/{prj_cd:str}/{sam:str}/{eff:str}/{spc:str}/{grp:str}/{fish:str}/{lamid:int}"

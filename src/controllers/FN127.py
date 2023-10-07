@@ -4,11 +4,8 @@ from schemas import FN127
 from .FishnetTables import FN127 as FN127Table
 from utils import (
     get_data,
-    get_data_values,
     get_rows,
-    read_sql_file,
     run_sql,
-    update_clause,
 )
 
 
@@ -50,8 +47,10 @@ class FN127Controller(Controller):
         self,
         data: FN127,
     ) -> Union[FN127, None]:
+        data_dict = data.model_dump()
+        values = FN127Table.values(data_dict)
+
         sql = FN127Table.create()
-        values = get_data_values(data)
 
         await run_sql(sql, values)
 
@@ -70,9 +69,9 @@ class FN127Controller(Controller):
         ageid: int,
     ) -> Union[FN127, None]:
         key_fields = [prj_cd, sam, eff, spc, grp, fish, ageid]
-        values = get_data_values(data)
-
-        sql = FN127Table.update_one(data.__dict__)
+        data_dict = data.model_dump()
+        values = FN127Table.values(data_dict)
+        sql = FN127Table.update_one(data_dict)
         params = values + key_fields
 
         await run_sql(sql, params)
