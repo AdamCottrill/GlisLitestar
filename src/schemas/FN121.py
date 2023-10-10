@@ -115,7 +115,7 @@ class FN121(FNBase):
     process_type: ProcessTypeEnum = ProcessTypeEnum.by_sample
 
     ssn: constr(pattern="^([A-Z0-9]{2})$")
-    subspace: constr(pattern="^([A-Z0-9]{2,6})$")
+    subspace: constr(pattern="^([A-Z0-9]{1,6})$")
     mode: constr(pattern="^([A-Z0-9]{2})$")
     effdt0: Optional[date] = None
     efftm0: Optional[time] = None
