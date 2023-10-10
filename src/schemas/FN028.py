@@ -5,7 +5,7 @@ from typing import Optional
 from pydantic import PositiveFloat, constr, field_validator, ConfigDict
 
 from .FNBase import FNBase
-from .utils import not_specified, string_to_float, int_to_string, PRJ_CD_REGEX
+from .utils import not_specified, string_to_float, to_string, PRJ_CD_REGEX
 
 # orient_choices, gruse_choices
 
@@ -49,7 +49,7 @@ class FN028(FNBase):
 
     model_config = ConfigDict(validate_assignment=True)
 
-    _int_to_string = field_validator("gruse", mode="before")(int_to_string)
+    _to_string = field_validator("gruse", mode="before")(to_string)
     _to_titlecase = field_validator("mode_des", mode="before")(not_specified)
 
     _string_to_float = field_validator("effdur_ge", "effdur_lt", mode="before")(
