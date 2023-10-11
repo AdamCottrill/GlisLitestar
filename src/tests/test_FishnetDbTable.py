@@ -226,6 +226,7 @@ def test_fntable_update(fishnet_table):
      [SAM]=? AND
      [EFF]=?
     """
+
     assert strip_string(sql) == strip_string(should_be)
 
 

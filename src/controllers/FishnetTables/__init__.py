@@ -11,3 +11,4 @@ from .FN125Tag import FN125Tag
 from .FN126 import FN126
 from .FN127 import FN127
 from .StreamDimension import StreamDimension
+from .GrEffProcType import GrEffProcType

@@ -144,7 +144,7 @@ def test_valid_alternatives(data, fld, value_in, value_out):
     """
     data[fld] = value_in
     item = StreamDimension(**data)
-    item_dict = item.dict()
+    item_dict = item.model_dump()
     assert item_dict[fld] == value_out
 
 
@@ -160,7 +160,7 @@ def test_width_more_than_metres_across(data):
     data["width"] = width
     data["metres_across"] = metres_across
     item = StreamDimension(**data)
-    item_dict = item.dict()
+    item_dict = item.model_dump()
     assert item_dict["width"] == width
     assert item_dict["metres_across"] == metres_across
 

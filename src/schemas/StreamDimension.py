@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import confloat, conint, constr, field_validator
+from pydantic import confloat, conint, constr, field_validator, ConfigDict
 
 from .FNBase import FNBase
 from .utils import PRJ_CD_REGEX, empty_to_none, string_to_float, string_to_int
@@ -20,8 +20,7 @@ class StreamDimension(FNBase):
 
     _empty_to_none = field_validator("comment", mode="before")(empty_to_none)
 
-    class Config:
-        validate_assignment = True
+    model_config = ConfigDict(validate_assignment=True)
 
     _string_to_float = field_validator(
         "metres_across",
