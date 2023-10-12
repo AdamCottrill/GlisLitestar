@@ -15,7 +15,7 @@ route_list = [
     "api/fn028",
     "api/fn121",
     "api/fn121_electrofishing",
-    "api/fn121_gps_track",
+    "api/fn121_gps_tracks",
     "api/fn122",
     "api/fn123",
     "api/fn123_nonfish",
