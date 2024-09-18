@@ -7,8 +7,8 @@ domain = "http://127.0.0.1:8000"
 prj_cd = "LEA_IA17_097"
 sam = sys.argv[1]
 
+root_url = f"{domain}/api/fn121/"
 
-root_url = "http://127.0.0.1:8000/api/fn121/"
 url = f"{root_url}{prj_cd}/{sam}"
 print("root url = ", root_url)
 print("detail url = ", url)
@@ -17,6 +17,8 @@ print("detail url = ", url)
 print("Checking our item list...")
 response = requests.get(url)
 print(response)
+
+
 assert response.status_code == 200
 
 # create a new FN121 item:

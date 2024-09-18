@@ -10,8 +10,8 @@ from typing import Union
 import aioodbc
 
 
-SRC_DB = os.path.abspath("../db/LEA_IA17_097_TEST.accdb")
-
+SRC_DB = os.getenv("GLIS_SRC_DB", "../db/LEA_IA17_097_TEST.accdb")
+SRC_DB = os.path.abspath(SRC_DB)
 
 def read_sql_file(sql_path: Path) -> str:
     """from Arjan Codes: Raw SQL, SQL Query Builder, or ORM?

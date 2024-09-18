@@ -1,0 +1,65 @@
+* GLIS Litestar
+
+GlisLitestar is a python application that create a CRUD API for GLIS
+assessment templates.
+
+* Install
+
+After creating and activating a virtual environment, all of the
+required dependencies can be installed using:
+
+#+begin_src shell
+
+  pip install -r requirements/requirements_local.txt
+
+#+end_src
+
+
+* Run the Application
+
+With the virtual environment active, and within the ~/src~ directory
+the application then be run using:
+
+#+begin_src bash
+
+  litestar run
+
+#+end_src
+
+See the Litestar documentation here: for details: https://docs.litestar.dev/2/tutorials/todo-app/0-application-basics.html
+
+
+* Run the Tests
+
+GlisLitestar has a fairly comprehensive test suite that ensure
+everything works as it should that that upgrading and maintenance is
+relatively easy.  To run the test just type:
+
+#+begin_src bash
+
+  pytest /tests
+
+#+end_src
+
+
+The test directory also contain a number of files that are not
+technically test files, but can be used during development to ensure that each
+of the CRUD endpoints work as expected.  All of these filenames start
+with ~ping_~. In order to use these files, it is assumed that the test
+server is running locally in a different terminal at ~127.0.0.1:8000~.
+Once the server is running, you can test the API endpoints by calling
+each file and providing the required arguments:
+
+#+begin_export bash
+
+python tests/ping_FN121_endpoints.py 110
+python tests/ping_FN123_endpoints.py 00
+
+#+end_export
+
+The python script will submit requests to list, get, update and delete
+the associated object(s) on the test database.  One gotcha with the
+ping tests, is that they may return a 504 - timeout error if you have
+a proxy defined in the current shell session. This occasionally
+happens with new installations as the proxy is used by pip. Starting a
+new fresh terminal session will usually fix the problem.

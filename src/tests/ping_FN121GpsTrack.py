@@ -10,7 +10,7 @@ prj_cd = "LEA_IA17_097"
 sam = "4001"
 trackid = sys.argv[1]
 
-root_url = "http://127.0.0.1:8000/api/fn121_gps_tracks"
+root_url = f"{domain}/api/fn121_gps_tracks"
 
 url = f"{root_url}/{prj_cd}/{sam}/{trackid}"
 print("root url = ", root_url)

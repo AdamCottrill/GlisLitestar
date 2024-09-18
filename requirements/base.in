@@ -1,0 +1,6 @@
+aioodbc==0.4.0
+pydantic==2.3.0
+litestar==2.0.1
+rich==13.8.1
+uvicorn==0.30.6
+jsbeautifier==1.15.1
