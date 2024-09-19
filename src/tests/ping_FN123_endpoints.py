@@ -7,8 +7,8 @@ domain = "http://127.0.0.1:8000"
 prj_cd = "LEA_IA17_097"
 sam = "4009"
 eff = "032"
-spc = "366"
-grp = sys.argv[1]
+spc = sys.argv[1]
+grp = "00"
 
 
 root_url = "http://127.0.0.1:8000/api/fn123/"

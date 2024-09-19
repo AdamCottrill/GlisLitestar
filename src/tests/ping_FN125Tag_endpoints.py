@@ -13,7 +13,7 @@ fish = "54"
 fish_tag_id = int(sys.argv[1])
 
 
-root_url = "http://127.0.0.1:8000/api/fn125_tag/"
+root_url = f"{domain}/api/fn125_tag/"
 url = f"{root_url}{prj_cd}/{sam}/{eff}/{spc}/{grp}/{fish}/{fish_tag_id}/"
 print("root url = ", root_url)
 print("detail url = ", url)
@@ -38,7 +38,7 @@ data = {
     "tagdoc": "67125",
     "tagstat": "C",
     "cwtseq": 333333,
-    "comment_tag": "TEST",
+    "comment_tag": "TEST"
 }
 
 print("creating new fn125_tag object...")

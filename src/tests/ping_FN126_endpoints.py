@@ -1,5 +1,7 @@
 import requests
+import sys
 from pprint import pprint
+
 
 domain = "http://127.0.0.1:8000"
 prj_cd = "LEA_IA17_097"
@@ -8,7 +10,7 @@ eff = "032"
 spc = "331"
 grp = "00"
 fish = "39750"
-food = 53
+food = int(sys.argv[1])
 
 
 root_url = "http://127.0.0.1:8000/api/fn126/"

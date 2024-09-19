@@ -1,6 +1,5 @@
 import requests
-
-# import sys
+import sys
 from pprint import pprint
 
 domain = "http://127.0.0.1:8000"
@@ -10,8 +9,8 @@ eff = "032"
 spc = "331"
 grp = "00"
 fish = "39750"
-# ageid = int(sys.argv[1])
-ageid = 34
+ageid = int(sys.argv[1])
+#ageid = 34
 
 
 root_url = "http://127.0.0.1:8000/api/fn127/"

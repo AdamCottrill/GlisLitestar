@@ -1,5 +1,7 @@
 from litestar import Litestar, get, MediaType
 
+from litestar.openapi import OpenAPIConfig
+
 from controllers import (
     FN011,
     FN012,
@@ -60,5 +62,7 @@ app = Litestar(
         FN127,
         GrEffProcType,
         StreamDimension,
-    ]
+    ],
+    openapi_config=OpenAPIConfig(title="Glis-Litestar API", version="0.0.1")
+
 )

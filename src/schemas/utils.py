@@ -123,6 +123,7 @@ def check_agest_values(value: str, allowed: str) -> Optional[str]:
         return value
 
 
+
 def check_agest(field_name: str, allowed: List[str]):
     return field_validator(field_name)(
         lambda v: check_agest_values(v, "".join(allowed))
@@ -147,6 +148,12 @@ def check_tissue(field_name: str, allowed: List[str]):
 def to_uppercase(value: str) -> str:
     if hasattr(value, "upper"):
         return value.upper()
+    else:
+        return value
+
+def to_titlecase(value: str) -> str:
+    if hasattr(value, "title"):
+        return value.title().replace("'S ","'s ")
     else:
         return value
 

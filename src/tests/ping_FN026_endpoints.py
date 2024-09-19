@@ -5,11 +5,11 @@ from pprint import pprint
 domain = "http://127.0.0.1:8000"
 
 prj_cd = "LEA_IA17_097"
-ssn = sys.argv[1]
+space = sys.argv[1]
 
 
-root_url = f"{domain}/api/fn022/"
-url = f"{root_url}{prj_cd}/{ssn}/"
+root_url = f"{domain}/api/fn026/"
+url = f"{root_url}{prj_cd}/{space}/"
 print("root url = ", root_url)
 print("detail url = ", url)
 
@@ -19,29 +19,39 @@ response = requests.get(url)
 print(response)
 assert response.status_code == 200
 
-# create a new FN022 item:
-
+# create a new FN026 item:
 data = {
     "prj_cd": prj_cd,
-    "ssn": ssn,
-    "ssn_date0": "2017-06-10",
-    "ssn_date1": "2017-06-20",
-    "ssn_des": "Created with a POST",
+    "space": space,
+    "space_des": "created by POST",
+    "dd_lat": 45.5,
+    "dd_lon": -81.5,
+    "sidep_lt": 50,
+    "sidep_ge": 10,
+    "grdep_lt": 50,
+    "grdep_ge": 5,
+    "space_wt": 0.5
 }
 
-print("creating new fn022 object...")
+print("creating new fn026 object...")
+
+print('root_url={}'.format(root_url))
+from pprint import pprint
+pprint(data)
+
 response = requests.post(root_url, json=data)
 print(response)
+
 pprint(response.json())
 assert response.status_code == 201
 
 
 data = {
     "prj_cd": prj_cd,
-    "ssn": ssn,
-    "ssn_date0": "2017-06-05",
-    "ssn_date1": "2017-06-25",
-    "ssn_des": "Updated with a PUT Request",
+    "space": space,
+    "space_des": "updated with PUT",
+    "dd_lat": 45.25,
+    "dd_lon": -81.25,
 }
 
 print("Update whole object with PUT request ...")
@@ -51,7 +61,7 @@ pprint(response.json())
 assert response.status_code == 200
 
 
-print("Deleting our new  fn022 object...")
+print("Deleting our new  fn026 object...")
 response = requests.delete(url)
 print(response)
 assert response.status_code == 204

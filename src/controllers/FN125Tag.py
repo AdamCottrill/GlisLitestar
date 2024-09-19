@@ -58,7 +58,6 @@ class FN125TagController(Controller):
         data: FN125Tag,
     ) -> Union[FN125Tag, None]:
         sql = FN125TagTable.create()
-
         data_dict = data.model_dump()
         values = FN125TagTable.values(data_dict)
         await run_sql(sql, values)

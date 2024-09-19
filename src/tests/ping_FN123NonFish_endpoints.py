@@ -10,7 +10,7 @@ eff = "032"
 taxon = sys.argv[1]
 
 
-root_url = "http://127.0.0.1:8000/api/fn123_nonfish/"
+root_url = f"{domain}/api/fn123_nonfish/"
 url = f"{root_url}{prj_cd}/{sam}/{eff}/{taxon}/"
 print("root url = ", root_url)
 print("detail url = ", url)
