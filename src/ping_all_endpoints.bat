@@ -4,9 +4,10 @@ REM database exist with elements referenced in the ping files.
 
 python tests/ping_FN022_endpoints.py AA
 python tests/ping_FN026_endpoints.py AA
+python tests/ping_FN026Subspace_endpoints.py AB
 python tests/ping_FN028_endpoints.py AA
 python tests/ping_FN121_endpoints.py 6565
-python tests/ping_FN121GpsTrack.py 55
+python tests/ping_FN121GpsTrack_endpoints.py 55
 python tests/ping_FN122_endpoints.py 55
 python tests/ping_FN123_endpoints.py 161
 python tests/ping_FN123Nonfish_endpoints.py 12345

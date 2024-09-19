@@ -1,10 +1,11 @@
 """=============================================================
- c:/Users/COTTRILLAD/1work/Python/pydantic_playground/tests/test_FN026.py
- Created: Thu Sep 19 2024 10:01 am
+ ~/fn_portal/tests/pydantic_schemas/test_FN026Subspace.py
+ Created: 26 Sep 2022 10:48:09
+
 
  DESCRIPTION:
 
-  A suite of unit tests to ensure that the Pydantic model for FN026
+  A suite of unit tests to ensure that the Pydantic model for FN026Subspace
   objects validate as expected.
 
   The script includes:
@@ -30,8 +31,7 @@
 import pytest
 from pydantic import ValidationError
 
-
-from src.schemas import FN026
+from src.schemas import FN026Subspace
 
 
 @pytest.fixture()
@@ -39,12 +39,15 @@ def data():
     data = {
         "prj_cd": "LHA_IA19_002",
         "space": "A1",
-        "space_des": "the lake",
-        "space_wt": 0.5,
+        "subspace": "IB",
+        "subspace_des": "the inner bay",
+        "subspace_wt": 0.5,
         "grdep_ge": 10.1,
         "grdep_lt": 100.1,
         "sidep_ge": 10.1,
         "sidep_lt": 100.1,
+        "grid_ge": 250.1,
+        "grid_lt": 260.1,
         "dd_lat": 45.5,
         "dd_lon": -81.5,
     }
@@ -58,11 +61,13 @@ def test_valid_data(data):
     - `data`:
     """
 
-    item = FN026(**data)
+    item = FN026Subspace(**data)
 
     assert item.prj_cd == data["prj_cd"]
-    assert item.space == data["space"].strip().title()
-    assert item.space_des == data["space_des"].strip().title()
+    assert item.space == data["space"]
+    assert item.subspace == data["subspace"].strip().upper()
+    assert item.subspace_des == data["subspace_des"].strip().title()
+
     assert item.dd_lat == data["dd_lat"]
     assert item.dd_lon == data["dd_lon"]
 
@@ -70,6 +75,7 @@ def test_valid_data(data):
 required_fields = [
     "prj_cd",
     "space",
+    "subspace",
 ]
 
 
@@ -87,13 +93,13 @@ def test_required_fields(data, fld):
     data[fld] = None
 
     with pytest.raises(ValidationError) as excinfo:
-        FN026(**data)
+        FN026Subspace(**data)
     msg = "Input should be a valid string"
     assert msg in str(excinfo.value)
 
 
 optional_fields = [
-    "space_wt",
+    "subspace_wt",
     "grdep_ge",
     "grdep_lt",
     "sidep_ge",
@@ -102,31 +108,31 @@ optional_fields = [
 
 
 @pytest.mark.parametrize("fld", optional_fields)
-def test_optional_fields(data, fld):
-    """Verify that the FN026 item is created without error if an optional field is omitted
+def test_optional_fields_as_none(data, fld):
+    """Verify that the FN026Subspace item is created without error if
+    an optional field is omitted
 
     Arguments:
     - `data`:
 
     """
     data[fld] = None
-    item = FN026(**data)
-    assert item.prj_cd == data["prj_cd"]
+    item = FN026Subspace(**data)
+    assert item.space == data["space"]
 
     data_dict = item.model_dump()
     assert data_dict[fld] is None
 
 
-
 @pytest.mark.parametrize("fld", optional_fields)
-def test_optional_fields_as_space(data, fld):
+def test_optional_fields_as_empty_string(data, fld):
     """The FN base model has a validator that converts empty strings
     to None. Verify that it works as expected when each of the option
     fields are speficied with a empty string.
     """
     data[fld] = ""
-    item = FN026(**data)
-    assert item.prj_cd == data["prj_cd"]
+    item = FN026Subspace(**data)
+    assert item.space == data["space"]
 
     data_dict = item.model_dump()
     assert data_dict[fld] is None
@@ -134,46 +140,46 @@ def test_optional_fields_as_space(data, fld):
 
 
 
-space_list = [
+subspace_list = [
     # field, input, output
-    ("space", "aa", "AA"),
-    ("space", "a1", "A1"),
-    ("space", "AA", "AA"),
-    ("space", "A1", "A1"),
-    ("space", "00", "00"),
-    ("space_des", "the bay", "The Bay"),
-    ("space_des", "THE BAY", "The Bay"),
-    ("space_des", " the bay ", "The Bay"),
+    ("subspace", "aa", "AA"),
+    ("subspace", "a1", "A1"),
+    ("subspace", "AA", "AA"),
+    ("subspace", "A1", "A1"),
+    ("subspace", "00", "00"),
+    ("subspace_des", "the bay", "The Bay"),
+    ("subspace_des", "THE BAY", "The Bay"),
+    ("subspace_des", " the bay ", "The Bay"),
     # possessive 's should not be capialized:
-    ("space_des", "HOMER'S LAKE", "Homer's Lake"),
-    ("space_des", "HOMER'S lake", "Homer's Lake"),
+    ("subspace_des", "HOMER'S LAKE", "Homer's Lake"),
+    ("subspace_des", "HOMER'S lake", "Homer's Lake"),
     ("grdep_ge", "", None),
     ("grdep_lt", "", None),
     ("sidep_ge", "", None),
     ("sidep_lt", "", None),
     ("grdep_ge", "0", 0),
     ("sidep_ge", "0", 0),
-    # strings with just spaces:
+    # strings with just subspaces:
     ("grdep_ge", " ", None),
     ("grdep_lt", "  ", None),
 ]
 
 
-@pytest.mark.parametrize("fld,value_in,value_out", space_list)
+@pytest.mark.parametrize("fld,value_in,value_out", subspace_list)
 def test_valid_alternatives(data, fld, value_in, value_out):
     """When the pydanic model is created, it should transform some fo the
-    fields.  For example, Space should be a four letter code made from uppercase
+    fields.  For example, Subspace should be a four letter code made from uppercase
     letters or digits.  The pydantic model should convert any letters
     to uppercase automatically. Uppercase letters and any numbers
-    should be returned unchanged.  space_des should be trimmed of any
-    white space and converted to upper case.
+    should be returned unchanged.  subspace_des should be trimmed of any
+    white subspace and converted to upper case.
 
     Arguments:
     - `data`:
 
     """
     data[fld] = value_in
-    item = FN026(**data)
+    item = FN026Subspace(**data)
     item_dict = item.model_dump()
     assert item_dict[fld] == value_out
 
@@ -194,7 +200,7 @@ def test_valid_paired_alternatives(data, fld1, fld2, value_in, value_out):
     """
     data[fld1] = value_in
     data[fld2] = value_in
-    item = FN026(**data)
+    item = FN026Subspace(**data)
     item_dict = item.model_dump()
     assert item_dict[fld1] == value_out
     assert item_dict[fld2] == value_out
@@ -202,14 +208,14 @@ def test_valid_paired_alternatives(data, fld1, fld2, value_in, value_out):
 
 error_list = [
     (
-        "space",
-        "AA1",
-        "String should have at most 2 characters",
+        "subspace",
+        "AA123456",
+        "String should have at most 6 characters",
     ),
     (
-        "space",
+        "subspace",
         "A*",
-        "String should match pattern '^([A-Z0-9]{2})$'",
+        "String should match pattern '^([A-Z0-9]{1,6})$'",
     ),
     ("grdep_ge", -3.14, "Input should be greater than or equal to 0"),
     ("grdep_lt", -3.14, "Input should be greater than 0"),
@@ -257,8 +263,8 @@ error_list = [
         -72.0,
         "Input should be less than or equal to -74.32",
     ),
-    ("space_wt", 0, "Input should be greater than 0"),
-    ("space_wt", 1.1, "Input should be less than or equal to 1"),
+    ("subspace_wt", 0, "Input should be greater than 0"),
+    ("subspace_wt", 1.1, "Input should be less than or equal to 1"),
 ]
 
 
@@ -272,5 +278,5 @@ def test_invalid_data(data, fld, value, msg):
 
     data[fld] = value
     with pytest.raises(ValidationError) as excinfo:
-        FN026(**data)
+        FN026Subspace(**data)
     assert msg in str(excinfo.value)

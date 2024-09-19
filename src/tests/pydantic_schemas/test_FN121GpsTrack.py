@@ -133,7 +133,7 @@ def test_valid_alternatives(data, fld, value_in, value_out):
     """
     data[fld] = value_in
     item = FN121GpsTrack(**data)
-    item_dict = item.dict()
+    item_dict = item.model_dump()
     assert item_dict[fld] == value_out
 
 
