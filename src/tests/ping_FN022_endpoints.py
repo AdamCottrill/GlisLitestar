@@ -44,7 +44,7 @@ data = {
     "ssn_des": "Updated with a PUT Request",
 }
 
-print("Update whole object with PUT request ...")
+print("Replace whole object with PUT request ...")
 response = requests.put(url, json=data)
 print(response)
 pprint(response.json())

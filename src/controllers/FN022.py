@@ -33,7 +33,7 @@ class FN022Controller(Controller):
     async def fn022_create(
         self,
         data: FN022,
-    ) -> Union[FN022, None]:
+    ) -> Optional[FN022]:
         sql = FN022Table.create()
 
         data_dict = data.model_dump()
@@ -49,7 +49,7 @@ class FN022Controller(Controller):
         data: FN022,
         prj_cd: str,
         ssn: str,
-    ) -> Union[FN022, None]:
+    ) -> Optional[FN022]:
         key_fields = [prj_cd, ssn]
 
         data_dict = data.model_dump()

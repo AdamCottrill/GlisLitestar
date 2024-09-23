@@ -1,17 +1,20 @@
-
 from typing import Optional
 
-from pydantic import (ConfigDict, PositiveFloat, confloat, constr,
-                      field_validator)
+from pydantic import ConfigDict, PositiveFloat, confloat, constr, field_validator
 
 from .FNBase import FNBase
-from .utils import (PRJ_CD_REGEX, not_specified, string_to_float, strip_0, to_titlecase, to_uppercase,
-                    yr_to_year)
-
+from .utils import (
+    PRJ_CD_REGEX,
+    not_specified,
+    string_to_float,
+    strip_0,
+    to_titlecase,
+    to_uppercase,
+    yr_to_year,
+)
 
 
 class FN026Subspace(FNBase):
-
     prj_cd: constr(pattern=PRJ_CD_REGEX)
     space: constr(pattern="^([A-Z0-9]{2})$", max_length=2, to_upper=True)
     subspace: constr(pattern="^([A-Z0-9]{1,6})$", max_length=6, to_upper=True)
@@ -28,11 +31,11 @@ class FN026Subspace(FNBase):
 
     model_config = ConfigDict(validate_assignment=True)
 
-    _to_titlecase = field_validator("subspace_des",  mode="before")(to_titlecase)
+    _to_titlecase = field_validator("subspace_des", mode="before")(to_titlecase)
 
-    _to_uppercase = field_validator("space", "subspace",  mode="before")(to_uppercase)
+    _to_uppercase = field_validator("space", "subspace", mode="before")(to_uppercase)
 
-    _strip_0 = field_validator("dd_lat", "dd_lon",  mode="before")(strip_0)
+    _strip_0 = field_validator("dd_lat", "dd_lon", mode="before")(strip_0)
 
     _string_to_float = field_validator(
         "grdep_ge",

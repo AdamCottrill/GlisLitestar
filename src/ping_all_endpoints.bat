@@ -2,7 +2,8 @@ REM - a utility file to actually hit the api endpoints - assumes that
 REM the dev server is running on 127.0.0.1:8000 - and that the test
 REM database exist with elements referenced in the ping files.
 
-python tests/ping_FN022_endpoints.py AA
+python tests/ping_FN011_endpoints.py LHA_IA20_123
+python tests/ping_FN022_endpoints.py AB
 python tests/ping_FN026_endpoints.py AA
 python tests/ping_FN026Subspace_endpoints.py AB
 python tests/ping_FN028_endpoints.py AA

@@ -1,4 +1,3 @@
-import pdb
 from litestar import Controller, get, post, put, delete
 from typing import Optional, Union
 from .FishnetTables import FN121GpsTrack as FN121GpsTrackTable
